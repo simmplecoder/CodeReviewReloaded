@@ -65,22 +65,28 @@
     })
     function sendAuthorizeRequest(url, params) {
         var result;
-        $.ajax ({
+        var request = $.ajax ({
             type: "POST",
             url: url,
             contentType: 'application/json',
             async: false,
-            data: JSON.stringify(params),
-            success: function (data, textStatus, xhr) {
-                console.log(xhr.status);
-                if (xhr.status === 200) {
-                    $("#warningLogin").text("Successful login");
-                    window.location=data;
-                } else {
-                    $("#warningLogin").text("Invalid username or password");
-                }
+            data: JSON.stringify(params)
+        });
+        request.success(function (data, textStatus, xhr) {
+            console.log(xhr.status);
+            if (xhr.status === 200) {
+                $("#warningLogin").text("Successful login");
+                window.location=data;
+            } else {
+                $("#warningLogin").text("Invalid username or password");
             }
         });
+
+        if (request.status === 401)
+        {
+            $("#warningLogin").text("Invalid username or password");
+        }
+
         return result;
     }
     function validAuthorizeParams(params) {
