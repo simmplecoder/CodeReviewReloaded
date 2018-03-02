@@ -22,7 +22,6 @@ public class LoginResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response getIt(String json) {
-        //Response.ok("drawing.html", MediaType.TEXT_PLAIN_TYPE);
-        return Response.ok().build();
+        return Response.ok("drawing.html", MediaType.TEXT_PLAIN_TYPE).build();
     }
 }

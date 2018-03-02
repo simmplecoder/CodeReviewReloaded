@@ -75,6 +75,7 @@
                 console.log(xhr.status);
                 if (xhr.status === 200) {
                     $("#warningLogin").text("Successful login");
+                    window.location=data;
                 } else {
                     $("#warningLogin").text("Invalid username or password");
                 }
