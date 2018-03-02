@@ -71,8 +71,9 @@
             contentType: 'application/json',
             async: false,
             data: JSON.stringify(params),
-            success: function (response) {
-                if (response.status === 200) {
+            success: function (data, textStatus, xhr) {
+                console.log(xhr.status);
+                if (xhr.status === 200) {
                     $("#warningLogin").text("Successful login");
                 } else {
                     $("#warningLogin").text("Invalid username or password");
@@ -118,7 +119,7 @@
         if (current_mode === LOGIN) {
             params["username"] = $("#loginEmail").val();
             params["password"] = $("#loginPassword").val();
-            $("warningLogin").text(sendAuthorizeRequest("/services/login", params));
+            $("warningLogin").text(sendAuthorizeRequest("services/login", params));
         } else {
             params["firstname"] = $("#firstname").val();
             params["lastname"] = $("#lastname").val();
@@ -129,19 +130,29 @@
             if (validationResult === true) {
                 $("#warningRegistration").text("valid");
                 params.remove("password2");
-                sendAuthorizeRequest("/register", params);
+                sendAuthorizeRequest("services/register", params);
             } else {
                 console.log(validationResult);
                 if (validationResult[0])
                     $("#firstNameWarning").text("Firstname length should be less than 30 characters");
+                else
+                    $("#firstNameWarning").text("Please enter your first name");
                 if (validationResult[1])
                     $("#lastNameWarning").text("Lastname length should be less than 30 characters");
+                else
+                    $("#lastNameWarning").text("Please enter your last name");
                 if (validationResult[2])
                     $("#passwordWarning").text("Password length should be less than 30 characters");
+                else
+                    $("#passwordWarning").text("Password length should be more than 6 symbols");
                 if (validationResult[3])
                     $("#passwordConfirmWarning").text("Passwords don't match");
+                else
+                    $("#passwordConfirmWarning").text("Passwords should match");
                 if (validationResult[4])
                     $("#emailWarning").text("Email should be valid email");
+                else
+                    $("#emailWarning").text("Enter any valid e-mail");
             }
         }
     })
