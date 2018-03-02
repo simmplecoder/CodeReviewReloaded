@@ -1,0 +1,23 @@
+#maincode {
+    font-family: consolas;
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    background: #f4fbf4;
+}
+
+.codeline {
+    margin : 0px;
+}
+
+.codecomment {
+    background: yellow;
+    padding: 1px 5px 1px 5px;
+    margin: 2px;
+    box-shadow: inset 1px 1px 1px 1px #F6D946;
+}
+
+.editBlock {
+    border: 1px solid black;
+    background: #57bf67;
+}
