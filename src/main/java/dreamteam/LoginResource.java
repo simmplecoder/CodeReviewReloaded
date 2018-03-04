@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
-@Path("login")
 public class LoginResource {
     private static final Map<String, String> users;
     private static final Pattern pattern = Pattern.compile(":\"\\S+\"");
@@ -32,8 +31,9 @@ public class LoginResource {
     }
 
     @POST
+    @Path("login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response getIt(String json) {
+    public Response authorize(String json) {
         Response.ResponseBuilder builder;
 
 
@@ -51,4 +51,14 @@ public class LoginResource {
         }
         return builder.build();
     }
+
+    @POST
+    @Path("registration")
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response register(String json) {
+        Response.ResponseBuilder builder = Response.ok("test");
+
+        return builder.build();
+    }
+
 }
