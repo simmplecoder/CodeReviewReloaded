@@ -12,20 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import representations.LoginAttempt;
 
 @Singleton
 public class LoginResource {
     private static final Map<String, String> users;
     private static final Pattern pattern = Pattern.compile(":\"\\S+\"");
 
-    private class LoginAttempt {
-        public String username;
-        public String password;
-    }
-
     static {
         users = new HashMap<>();
-        users.put("Olzhas", "SilentDarkness");
+        users.put("Olzhas", "456");
         users.put("Jacob", "ScarletSkies");
         users.put("Ashley", "BlueEyes");
     }
