@@ -1,40 +1,37 @@
 package dreamteam;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import representations.LoginAttempt;
 
-@Singleton
+
+@Path("login")
 public class LoginResource {
     private static final Map<String, String> users;
     private static final Pattern pattern = Pattern.compile(":\"\\S+\"");
 
+    private class LoginAttempt {
+        public String username;
+        public String password;
+    }
+
     static {
         users = new HashMap<>();
-        users.put("Olzhas", "456");
+        users.put("Olzhas", "SilentDarkness");
         users.put("Jacob", "ScarletSkies");
         users.put("Ashley", "BlueEyes");
     }
 
     @POST
-    @Path("login")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response authorize(String json) {
+    public Response getIt(String json) {
         Response.ResponseBuilder builder;
 
-
-//        Type type = new TypeToken<Map<String, String>>(){}.getType();
-//        Map<String, String> loginAttempt = new Gson().fromJson(json, type);
         LoginAttempt loginAttempt = new Gson().fromJson(json, LoginAttempt.class);
 
         String username = loginAttempt.username;
@@ -47,14 +44,4 @@ public class LoginResource {
         }
         return builder.build();
     }
-
-    @POST
-    @Path("registration")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(String json) {
-        Response.ResponseBuilder builder = Response.ok("test");
-
-        return builder.build();
-    }
-
 }
