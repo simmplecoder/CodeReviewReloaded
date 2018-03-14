@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Welcome!</title>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="resources/assignments_loader.js"></script>
+    <script type="text/javascript" src="resources/registered_course_list_loader.js"></script>
+    
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    
+</head>
+<body>
+	
+<header class="w3-container w3-green">
+  <h1>Code Review Tool</h1>
+</header>
+
+<div class="w3-container">
+  <div class="w3-row">
+  		<div class="w3-col" style="padding-left: 10px; padding-top:20px;">
+  			<h4 class ="w3-text-dark-grey"> <b> Your registered course: </b></h4>
+  		</div>
+  </div>
+  <div class="w3-row">
+		<div class="w3-col m3 l3 w3-text-green" style="padding: 5px; height: 500px;">
+			<div id = "course_list" class = "w3-border w3-round">
+			</div>
+		</div>
+		<div class="w3-col m9 l9" style="padding: 10px; height: 500px;">
+			<div id = "assignment_list" class = "w3-border w3-round">
+			</div>
+		</div>
+	</div>
+</div>
+
+
+	
+</body>
+
+<script>
+
+	$("#course_list").append(registered_course_list_loader("#assignment_list"));
+
+</script>
+
+</html>
