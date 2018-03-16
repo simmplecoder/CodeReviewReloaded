@@ -1,6 +1,7 @@
 package dreamteam;
 
 import com.google.gson.Gson;
+import representations.RegisterAttempt;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,5 +44,17 @@ public class LoginResource {
             builder = Response.ok("drawing.html", MediaType.TEXT_PLAIN_TYPE);
         }
         return builder.build();
+    }
+
+    @POST
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response register(String json)
+    {
+        RegisterAttempt registerAttempt = new Gson().fromJson(json, RegisterAttempt.class);
+
+        System.out.println(registerAttempt.firstname + " " + registerAttempt.lastname);
+        System.out.println(registerAttempt.username + " " + registerAttempt.password);
+
+        return Response.ok().build();
     }
 }
