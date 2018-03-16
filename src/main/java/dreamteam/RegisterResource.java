@@ -9,8 +9,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("register")
+@Path("/register")
 public class RegisterResource {
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     public Response register(String json)

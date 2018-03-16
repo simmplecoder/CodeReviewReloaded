@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Path("login")
+@Path("/login")
 public class LoginResource {
     private static final Map<String, String> users;
     private static final Pattern pattern = Pattern.compile(":\"\\S+\"");
@@ -22,6 +22,7 @@ public class LoginResource {
 
     static {
         users = new HashMap<>();
+        users.put("user", "qwerty");
         users.put("Olzhas", "SilentDarkness");
         users.put("Jacob", "ScarletSkies");
         users.put("Ashley", "BlueEyes");
@@ -40,10 +41,8 @@ public class LoginResource {
         if (!users.containsKey(username) || !users.get(username).equals(password)) {
             builder = Response.status(Response.Status.UNAUTHORIZED);
         } else {
-            builder = Response.ok("drawing.html", MediaType.TEXT_PLAIN_TYPE);
+            builder = Response.ok("home.html", MediaType.TEXT_PLAIN_TYPE);
         }
         return builder.build();
     }
-
-
 }
