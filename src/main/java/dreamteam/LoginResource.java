@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-
 @Path("login")
 public class LoginResource {
     private static final Map<String, String> users;
@@ -46,15 +45,5 @@ public class LoginResource {
         return builder.build();
     }
 
-    @POST
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response register(String json)
-    {
-        RegisterAttempt registerAttempt = new Gson().fromJson(json, RegisterAttempt.class);
 
-        System.out.println(registerAttempt.firstname + " " + registerAttempt.lastname);
-        System.out.println(registerAttempt.username + " " + registerAttempt.password);
-
-        return Response.ok().build();
-    }
 }

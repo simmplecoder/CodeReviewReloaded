@@ -1,5 +1,7 @@
 package dreamteam;
 
+import representations.RegisterAttempt;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import java.util.HashSet;
@@ -13,6 +15,7 @@ public class App extends Application {
     public App()
     {
         singletons.add(new LoginResource());
+        singletons.add(new RegisterAttempt());
     }
 
     public Set<Object> getSingletons()
