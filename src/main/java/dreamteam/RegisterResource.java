@@ -1,5 +1,6 @@
 package dreamteam;
 
+import auth.PasswordKeeper;
 import com.google.gson.Gson;
 import representations.RegisterAttempt;
 
@@ -9,11 +10,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Path("/register")
 public class RegisterResource {
+    private PasswordKeeper keeper;
+
+    RegisterResource(PasswordKeeper keeper)
+    {
+        this.keeper = keeper;
+    }
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
@@ -27,6 +32,12 @@ public class RegisterResource {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
-        return Response.ok("home.html", MediaType.TEXT_PLAIN_TYPE).build();
+        if (keeper.register(registerAttempt.email, registerAttempt.password))
+        {
+            return Response.ok("home.html", MediaType.TEXT_PLAIN_TYPE).build();
+        }
+
+        return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),
+                "The user with the email already exists").build();
     }
 }
