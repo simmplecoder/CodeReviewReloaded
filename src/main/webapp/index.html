@@ -74,67 +74,107 @@
 </body>
 
 <script>
-	const form_modes = ["Register", "Login"];
-	const form_display_mode = ["none", "block"];
-	const LOGIN = 0;
-	var current_mode = LOGIN;
-	
-	$("#switcher").click(function() {
-	  $("#login").css("display", form_display_mode[current_mode]);
-	  $("#register").css("display", form_display_mode[current_mode ^ 1]);
-	  $("#submitButton").text(form_modes[current_mode]);
-	  $("#switcher").text(form_modes[current_mode ^ 1]);
-	  current_mode ^= 1;
-	});
-	
-	function sendAuthorizeRequest(url, params) {
-	  var request = $.ajax ({
-	    type: "POST",
-	    url: url,
-	    contentType: 'application/json',
-	    async: false,
-	    data: JSON.stringify(params)
-	  });
-	  
-	  request.success(function (data, textStatus, xhr) {
-	    $("#warningLogin").text("Successful login");
-	    window.location = data;
-	  });
-	  
-	  if (request.status === 401) {
-	    $("#warningLogin").text("Invalid username or password");
-	  }
-	}
-	
-	$("#submitButton").click(function() {
-		console.log("submit button");
-	  var params = {};
-	  if (current_mode === LOGIN) {
-	    params.username = $("#loginEmail").val();
-	    params.password = $("#loginPassword").val();
-	    $("warningLogin").text(sendAuthorizeRequest("services/login", params));
-	  } else {
-	    params.firstname = $("#firstname").val();
-	    params.lastname = $("#lastname").val();
-	    params.password = $("#registerPassword").val();
-	    params.password2 = $("#registerPasswordConfirm").val();
-	    params.email = $("#registerEmail").val();
-	    
-	    var result = authorization_validate(params);
-	    if (result === true) {
-			$("#warningRegistration").text("valid");
-			delete params.password2;
-			sendAuthorizeRequest("services/register", params);
-	    } else {
-			console.log(result);
-			$("#firstNameWarning").text(["Firstname should be less than 30 characters", "Please enter your first name"][1 - result[0]]); 
-			$("#lastNameWarning").text(["Lastname should be less than 30 characters", "Please enter your last name"][1 - result[1]]);
-			$("#passwordWarning").text(["Invalid password.", "Password length should be more than 6 symbols"][1 - result[2]]);
-			$("#passwordConfirmWarning").text(["Passwords don't match", "Passwords should match"][1 - result[3]]);
-			$("#emailWarning").text(["Invalid email", "Please enter valid e-mail"][1 - result[4]]);
-	    }
-	  }
-	});
+	"use strict";
+
+    function sendLoginRequest(params)
+    {
+        var request = $.ajax(
+            {
+                type: "POST",
+                url: "services/login",
+                contentType: "application/json",
+                data: JSON.stringify(params)
+            }
+        );
+
+        request.success(function (data, textStatus, xhr) {
+            $("#warningLogin").text("Successful login");
+            window.location = data;
+        });
+
+        var warningText;
+        if (request.status === 401) {
+            warningText = "Invalid username and/or password";
+        }
+        else
+        {
+            warningText = "Unknown error occured"
+        }
+        $("$warningLogin").text = warningText;
+    }
+
+    function sendRegistrationRequest(params)
+    {
+        var request = $.ajax({
+            type: "POST",
+            url: "services/register",
+            contentType: "application/json",
+            async: false,
+            data: JSON.stringify(params)
+        });
+
+        request.success(function (data, textStatus, xhr) {
+            window.location = data;
+        })
+    }
+
+    function performLogin(){
+        var params = {};
+        params.username = $("#loginEmail").val();
+        params.password = $("#loginPassword").val();
+
+        sendLoginRequest(params);
+    }
+
+    function performRegistration() {
+        var params = {};
+        params.firstname = $("#firstname").val();
+        params.lastname = $("#lastname").val();
+        params.password = $("#registerPassword").val();
+        params.password2 = $("#registerPasswordConfirm").val();
+        params.email = $("#registerEmail").val();
+
+        var authorization_result = authorization_validate(params);
+        if (authorization_result === true)
+        {
+            sendRegistrationRequest(params);
+        }
+        else
+        {
+            console.log(result);
+            $("#firstNameWarning").text(["Firstname should be less than 30 characters", "Please enter your first name"][1 - authorization_result[0]]);
+            $("#lastNameWarning").text(["Lastname should be less than 30 characters", "Please enter your last name"][1 - authorization_result[1]]);
+            $("#passwordWarning").text(["Invalid password.", "Password length should be more than 6 symbols"][1 - authorization_result[2]]);
+            $("#passwordConfirmWarning").text(["Passwords don't match", "Passwords should match"][1 - authorization_result[3]]);
+            $("#emailWarning").text(["Invalid email", "Please enter valid e-mail"][1 -authorization_result[4]]);
+        }
+    }
+
+    var currentAuthorizationMethod = performLogin;
+    const form_modes = ["Register", "Login"];
+    const form_display_mode = ["none", "block"];
+    const LOGIN = 0;
+    var current_mode = LOGIN;
+
+    $("#switcher").click(function() {
+        $("#login").css("display", form_display_mode[current_mode]);
+        $("#register").css("display", form_display_mode[current_mode ^ 1]);
+        $("#submitButton").text(form_modes[current_mode]);
+        $("#switcher").text(form_modes[current_mode ^ 1]);
+        current_mode ^= 1;
+
+        if (currentAuthorizationMethod === performLogin) {
+            currentAuthorizationMethod = performRegistration;
+        }
+        else {
+            currentAuthorizationMethod = performLogin;
+        }
+    });
+
+    $("#submitButton").click(function()
+    {
+        currentAuthorizationMethod();
+    })
 </script>
 
 </html>

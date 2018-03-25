@@ -1,5 +1,5 @@
 function authorization_validate(params) {
-    var errors = [0, 0, 0, 0, 0];
+    var errors = [false, false, false, false, false];
     
     errors[0] = ("firstname" in params && params.firstname.length > 30); 
     errors[1] = ("lastname" in params && params.lastname.length > 30); 
@@ -10,5 +10,5 @@ function authorization_validate(params) {
     if (errors[0] + errors[1] + errors[2] + errors[3] + errors[4] === 0)
         return true;
     else
-    		return errors;
+        return errors;
 }
