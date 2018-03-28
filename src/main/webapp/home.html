@@ -9,6 +9,13 @@
     <script type="text/javascript" src="resources/registered_course_list_loader.js"></script>
     
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="resources/css/home.css">
+
+    <script type="text/javascript" src="resources/js/list-loaders.js"></script>
+
+	<!-- Loading jsons, later should be replaced with Ajax Requests	 -->
+    <script type="text/javascript" src="resources/json/submissions.json"></script>
+    <script type="text/javascript" src="resources/json/submissions2.json"></script>
     
 </head>
 <body>
@@ -42,6 +49,7 @@
 <script>
 
 	$("#course_list").append(registered_course_list_loader("#assignment_list"));
+	// loader(null, load_courses)
 
 </script>
 
