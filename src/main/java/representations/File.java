@@ -1,6 +1,6 @@
 package representations;
 
-public class Filee {
+public class File {
 	public String id;
 	public String name;
 	public String url = "file";
