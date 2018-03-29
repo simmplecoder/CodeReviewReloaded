@@ -36,7 +36,8 @@ function assignments_loader(course_id) {
             
             $infoDiv.empty();
             $infoDiv.text(assignment["description"]);
-            $infoDiv.append(getUploadView());
+            var $uploadView = getUploadView(); 
+            $infoDiv.append($uploadView);
 
             if ($div2.hasClass("w3-hide")) {
                 $div2.removeClass("w3-hide");

@@ -7,17 +7,24 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
 	
+	<!-- Loading ColoredCode JS -->
+	<script type="text/javascript" src="resources/colored_code.js"></script>
+	<script type="text/javascript" src="resources/prettify.js"></script>
+
 	<!-- Loading loaders JS -->
 	<script type="text/javascript" src="resources/loaders/assignments_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/courses_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/submissions_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/list-loaders.js"></script>
     <script type="text/javascript" src="resources/loaders/upload_creator.js"></script>
+    <script type="text/javascript" src="resources/loaders/files_loader.js"></script>
     
+
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="resources/css/home.css">
 
 	<!-- Loading jsons, later should be replaced with Ajax Requests	 -->
+	<script type="text/javascript" src="resources/json/data.json"></script>
     <script type="text/javascript" src="resources/json/submissions.json"></script>
     <script type="text/javascript" src="resources/json/submissions2.json"></script>
     
@@ -52,6 +59,7 @@
 <script>
 
 	$("#course_list").append(courses_loader());
+
 
 </script>
 

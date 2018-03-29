@@ -25,7 +25,8 @@ function submissions_loader(id) {
 		$li.addClass("w3-padding-large w3-hover-pale-green");
 		$li.text(submission["title"]);
 		$li.click(function() {
-			files_loader(submission["id"]);
+			let $file = getFiles(submission["id"]);
+			$li.append($file)
 		});
 		
 		$ul.append($li);

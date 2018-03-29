@@ -1,6 +1,6 @@
 function getUploadView() {
 
-	let $uploadView = $("div");
+	let $uploadView = $("<div>");
 
 	//      MARK: - File Uploading
     let $input = $("<input id='home_input' type='file' multiple>").appendTo($uploadView);
