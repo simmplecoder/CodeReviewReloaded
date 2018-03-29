@@ -76,6 +76,9 @@
 <script>
 	"use strict";
 
+	
+
+	
     function sendLoginRequest(params)
     {
         var request = $.ajax(
@@ -135,13 +138,10 @@
         params.email = $("#registerEmail").val();
 
         var authorization_result = authorization_validate(params);
-        if (authorization_result === true)
-        {
+        if (authorization_result === true) {
             sendRegistrationRequest(params);
         }
-        else
-        {
-            console.log(result);
+        else {
             $("#firstNameWarning").text(["Firstname should be less than 30 characters", "Please enter your first name"][1 - authorization_result[0]]);
             $("#lastNameWarning").text(["Lastname should be less than 30 characters", "Please enter your last name"][1 - authorization_result[1]]);
             $("#passwordWarning").text(["Invalid password.", "Password length should be more than 6 symbols"][1 - authorization_result[2]]);
