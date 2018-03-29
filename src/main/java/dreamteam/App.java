@@ -26,6 +26,7 @@ public class App extends Application {
             PasswordKeeper keeper = new UnencryptedPasswordKeeper(credentialsPath.getPath());
             singletons.add(new LoginResource(keeper));
             singletons.add(new RegisterResource(keeper));
+            singletons.add(new PlaceholderDatabaseResource());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
