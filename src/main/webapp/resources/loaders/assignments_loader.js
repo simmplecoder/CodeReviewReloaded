@@ -29,13 +29,14 @@ function assignments_loader(course_id) {
         $button.appendTo($adiv);
         
         let $infoDiv = $("<div>").addClass("w3-container w3-hide w3-padding-24").appendTo($adiv);
-        $infoDiv.text(assignment["description"]);
-        
     
-        $button.click(function() {  
+        $button.click(function() {
+        		var description = assignment["description"];
             let $div2 = $infoDiv;
-            let $uploadView = getUploadView();
-            $infoDiv.append($uploadView);
+            
+            $infoDiv.empty();
+            $infoDiv.text(assignment["description"]);
+            $infoDiv.append(getUploadView());
 
             if ($div2.hasClass("w3-hide")) {
                 $div2.removeClass("w3-hide");

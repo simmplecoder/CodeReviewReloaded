@@ -31,39 +31,36 @@ function getUploadView() {
 
     let $submissionsList = submissions_loader();
     
-    $uploadView.append(getUploadBtn($submissionsList, $adiv, filesStr));
+    $uploadView.append(getUploadBtn($submissionsList, $uploadView, filesStr));
 
     $uploadView.append($submissionsList);
     
     return $uploadView;
 }
 
-
-
-
-function getUploadBtn($submissionsList, $adiv, filesStr) {
+function getUploadBtn($submissionsList, $uploadView, filesStr) {
     let $uploadButton = $("<button>").text("Upload").click(function() {
-    let uploadedFilesJson = {
-        "files": filesStr,
-    }
-
-    $submissionsList.empty();
-    $submissionsList = submissions_loader();
-    $adiv.append($submissionsList);
-
-    // Should be implemented, when backend will be ready
-    // $.ajax({
-    //     type: "POST",
-    //     url: "services/UPLOAD",          // SHOULD Be Changed
-    //     contentType: "application/json",
-    //     data: JSON.stringify(uploadedFilesJson), 
-    //     success: function(result){
-    //         console.log("Success");
-    //     },
-    //     error: function() {
-    //         alert("Failed to load files.")
-    //     },
-    // });
+	    let uploadedFilesJson = {
+	        "files": filesStr,
+	    }
+	
+	    $submissionsList.empty();
+	    $submissionsList = submissions_loader();
+	    $uploadView.append($submissionsList);
+	
+	    // Should be implemented, when backend will be ready
+	    // $.ajax({
+	    //     type: "POST",
+	    //     url: "services/UPLOAD",          // SHOULD Be Changed
+	    //     contentType: "application/json",
+	    //     data: JSON.stringify(uploadedFilesJson), 
+	    //     success: function(result){
+	    //         console.log("Success");
+	    //     },
+	    //     error: function() {
+	    //         alert("Failed to load files.")
+	    //     },
+	    // });
 
     });
 
