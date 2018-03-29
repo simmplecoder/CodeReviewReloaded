@@ -83,6 +83,7 @@ function createColoredCode(data) {
 
 		arrayPre = [];
 
+        parent.empty();
 		var $ol = $(TAG_OL, {id:"oldMainCode"}).appendTo(parent);
         var line = 1;
         var current = 0;

@@ -8,11 +8,25 @@ function getFiles() {
 		let file = files[i];
 		let $li = $("<li>");
 
-		$li.text(file["name"]);
-		$li.click(function() {
+		let $button = $("<li>").appendTo($li);
+		$button.text(file["name"]);
+		let $div = $("<div>").addClass("w3-hide").appendTo($li);
+
+		$button.click(function() {
 			$li.removeAttr('class');
-			$li.append(createColoredCode(data));
+			$div.empty();
+			$div.append(createColoredCode(data));
 			PR.prettyPrint();
+
+			if ($div.hasClass("w3-hide")) {
+                $div.removeClass("w3-hide");
+                $div.addClass("w3-show");
+                $button.addClass("w3-text-green");
+            } else {
+                $div.addClass("w3-hide");
+                $div.removeClass("w3-show");
+                $button.removeClass("w3-text-green");
+            }
 		});
 		
 		$ul.append($li);

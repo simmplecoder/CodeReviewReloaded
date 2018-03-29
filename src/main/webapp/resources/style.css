@@ -1,0 +1,34 @@
+#maincode {
+    font-family: consolas;
+    width: 80%;
+    margin: auto;
+    padding: 10px;
+    background: #f4fbf4;
+}
+
+.codeline {
+    margin : 0px 0px 0px -20px;
+
+}
+
+.codecomment {
+    background: yellow;
+    padding: 5px;
+    margin: 10px;   
+    box-shadow: inset 1px 1px 1px 1px #F6D946;
+}
+
+.editBlock {
+    border: 1px solid black;
+    background: #57bf67;
+}
+
+#oldMainCode {
+    font-size: 12px;
+}
+#oldMainC/*ode ol  {
+    height: 12px;
+}
+#oldMainCode li  {
+    height: 12px;
+}*/
