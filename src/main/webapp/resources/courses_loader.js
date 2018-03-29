@@ -1,4 +1,4 @@
-function registered_course_list_loader(where) {
+function courses_loader(where) {
 	let courses = [
 		{"title": "Programming in C", "course_id" : "id1"}, 
 		{"title": "Computational Physics", "course_id" : "id2"},
