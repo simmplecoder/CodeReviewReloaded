@@ -7,17 +7,29 @@
 }
 
 .codeline {
-    margin : 0px;
+    margin : 0px 0px 0px -20px;
+
 }
 
 .codecomment {
     background: yellow;
-    padding: 1px 5px 1px 5px;
-    margin: 2px;
+    padding: 5px;
+    margin: 10px;   
     box-shadow: inset 1px 1px 1px 1px #F6D946;
 }
 
 .editBlock {
     border: 1px solid black;
     background: #57bf67;
+}
+
+#oldMainCode {
+    /*height: 15px;*/
+    font-size: 12px;
+}
+#oldMainCode ol  {
+    height: 12px;
+}
+#oldMainCode li  {
+    height: 12px;
 }

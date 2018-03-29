@@ -18,7 +18,6 @@ function createColoredCode(data) {
         createCodeLine: function(content, lineNumber) {
             var $li = $(TAG_LI).addClass("codeline").append(content)
             $li.data("lineNumber", lineNumber);
-
             $li.mouseup(function() {
                 endLine = $(this).data("lineNumber");
                 if(startLine > endLine)

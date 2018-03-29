@@ -17,7 +17,7 @@ function submissions_loader(id) {
 	
 	var submissions = [{"title":"by Ibrakhim Ilyassov", "id" : "id01"}, {"title":"by Anuar Maratkhan", "id" : "id02"}];
 	
-	let $ul = $("<ul>").addClass("w3-ul w3-hoverable w3-panel  w3-light-grey w3-leftbar w3-border-green");
+	let $ul = $("<ul>").addClass("w3-ul w3-panel  w3-light-grey w3-leftbar w3-border-green");
 	
 	for (let i = 0; i < submissions.length; i++) {
 		let submission = submissions[i];
