@@ -3,12 +3,11 @@
     width: 80%;
     margin: auto;
     padding: 10px;
-    background: #f4fbf4;
+    /* background-color: #f4fbf4; */
 }
 
 .codeline {
     margin : 0px 0px 0px -20px;
-
 }
 
 .codecomment {
