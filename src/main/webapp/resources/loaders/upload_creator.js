@@ -16,6 +16,7 @@ function getUploadView() {
                 var reader = new FileReader();
                 reader.onload = (function(reader) {
                     return function() {
+                    	console.log(reader.result);
                     filesStr.push(reader.result);
                 };
             }) (reader);

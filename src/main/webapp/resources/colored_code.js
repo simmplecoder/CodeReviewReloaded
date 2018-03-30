@@ -125,8 +125,8 @@ function createColoredCode(data) {
             editWindowOpened = false;
 			comments.push(comment);
 			console.log(comments);
-			// loadLines(data["lines"], "#maincode");
             loadLines(data["lines"], $maincode);
+            PR.prettyPrint();
         });
         var $cancelButton = $("<button>").text("Cancel").appendTo($editBlock).click(function() {
             $editBlockRef.remove();
