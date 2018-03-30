@@ -13,20 +13,12 @@ public class UnencryptedPasswordKeeper implements PasswordKeeper {
     private Map<String, String> userToPassword;
     private PrintWriter out;
 
-    public UnencryptedPasswordKeeper(String filename)
-    {
-        try {
-            out = new PrintWriter(new FileWriter(filename, true));
-            userToPassword = Files.lines(Paths.get(filename))
-                    .filter(line -> !line.isEmpty())
-                    .map(line -> line.split(" : "))
-                    .collect(Collectors.toMap(splitLine -> splitLine[0], splitLine -> splitLine[1]));
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public UnencryptedPasswordKeeper(String filename) throws IOException {
+        out = new PrintWriter(new FileWriter(filename, true));
+        userToPassword = Files.lines(Paths.get(filename))
+                .filter(line -> !line.isEmpty())
+                .map(line -> line.split(" : "))
+                .collect(Collectors.toMap(splitLine -> splitLine[0], splitLine -> splitLine[1]));
     }
 
     @Override

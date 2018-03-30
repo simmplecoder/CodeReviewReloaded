@@ -10,6 +10,7 @@ import javax.ws.rs.core.Context;
 
 import com.jcraft.jsch.JSchException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,18 +27,27 @@ public class App extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public App(@Context ServletContext context) {
-
-        URL credentialsPath;
         try {
-            credentialsPath = context.getResource("/credentials.txt");
-            PasswordKeeper keeper = new UnencryptedPasswordKeeper(credentialsPath.getPath());
+            URL path = UnencryptedPasswordKeeper.class.getClassLoader().getResource(".");
+            System.out.println(path.getPath());
+            String realPath = path.getPath();
+            String[] splitedPath = realPath.split("/");
+            realPath = "";
+            for (int i = 0; i < splitedPath.length - 2; i++) {
+                realPath += splitedPath[i] + "/";
+            }
+            realPath += "credentials.txt";
+            File file = new File(realPath);
+            System.out.println(realPath);
+            file.createNewFile(); // if file already exists will do nothing
+            UnencryptedPasswordKeeper keeper = new UnencryptedPasswordKeeper(realPath);
             singletons.add(new LoginResource(keeper));
             singletons.add(new RegisterResource(keeper));
             singletons.add(new CoursesDao());
             singletons.add(new AssignmentsDao());
-        } catch (MalformedURLException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        }       
+        }
     }
 
     public Set<Object> getSingletons()
