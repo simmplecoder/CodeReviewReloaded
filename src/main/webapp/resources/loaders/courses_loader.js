@@ -1,8 +1,5 @@
 function courses_loader() {
-	
 	var params = { "username" : "ibro@nu.edu.kz" };
-	
-	console.log("got here");
 	
 	var request = $.ajax({
         type: "POST",
@@ -13,9 +10,8 @@ function courses_loader() {
     });
 
 	let courses = [];
-    request.success(function (data, textStatus, xhr) {
-    		console.log(data);
-    		courses = JSON.parse(data);
+    request.success(function (response) {
+    		courses = response;
     });
 	
 //	var courses = [{"title" : "CSCI 151", "id" : "id0"}, {"title" : "CSCI 152", "id" : "id1"}];
