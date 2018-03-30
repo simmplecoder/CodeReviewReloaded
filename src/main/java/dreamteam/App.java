@@ -7,10 +7,16 @@ import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
+
+import com.jcraft.jsch.JSchException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import java.sql.SQLException;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,17 +26,17 @@ public class App extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public App(@Context ServletContext context) {
+
         URL credentialsPath;
         try {
             credentialsPath = context.getResource("/credentials.txt");
             PasswordKeeper keeper = new UnencryptedPasswordKeeper(credentialsPath.getPath());
             singletons.add(new LoginResource(keeper));
             singletons.add(new RegisterResource(keeper));
-            singletons.add(new PlaceholderDatabaseResource());
+            singletons.add(new DataGatherer());
         } catch (MalformedURLException e) {
             e.printStackTrace();
-        }
-
+        }       
     }
 
     public Set<Object> getSingletons()
