@@ -1,22 +1,10 @@
 function courses_loader() {
 	var params = { "username" : "ibro@nu.edu.kz" };
-	
-	var request = $.ajax({
-        type: "POST",
-        url: "services/courses",
-        contentType: "application/json",
-        async: false,
-        data: JSON.stringify(params)
-    });
+    var courses = items_loader("courses", params);
 
-	let courses = [];
-    request.success(function (response) {
-    		courses = response;
-    });
-	
 //	var courses = [{"title" : "CSCI 151", "id" : "id0"}, {"title" : "CSCI 152", "id" : "id1"}];
 	
-	let $ul = $("<ul>").addClass("w3-ul w3-hoverable");
+	var $ul = $("<ul>").addClass("w3-ul w3-hoverable");
 	
 	for (let i = 0; i < courses.length; i++) {
 		let course = courses[i];

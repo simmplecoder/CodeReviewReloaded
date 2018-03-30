@@ -18,15 +18,7 @@ function getFiles() {
 			$div.append(createColoredCode(data));
 			PR.prettyPrint();
 
-			if ($div.hasClass("w3-hide")) {
-                $div.removeClass("w3-hide");
-                $div.addClass("w3-show");
-                $button.addClass("w3-text-green");
-            } else {
-                $div.addClass("w3-hide");
-                $div.removeClass("w3-show");
-                $button.removeClass("w3-text-green");
-            }
+			toggle($div, $button);
 		});
 		
 		$ul.append($li);

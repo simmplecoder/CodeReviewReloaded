@@ -1,6 +1,7 @@
 package dreamteam;
 
 import auth.PasswordKeeper;
+import auth.RequestFilter;
 import auth.UnencryptedPasswordKeeper;
 
 import javax.servlet.ServletContext;
@@ -34,6 +35,7 @@ public class App extends Application {
             singletons.add(new LoginResource(keeper));
             singletons.add(new RegisterResource(keeper));
             singletons.add(new DataGatherer());
+            singletons.add(new RequestFilter());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }       
