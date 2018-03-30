@@ -33,7 +33,8 @@ public class App extends Application {
             PasswordKeeper keeper = new UnencryptedPasswordKeeper(credentialsPath.getPath());
             singletons.add(new LoginResource(keeper));
             singletons.add(new RegisterResource(keeper));
-            singletons.add(new DataGatherer());
+            singletons.add(new CoursesDao());
+            singletons.add(new AssignmentsDao());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }       
