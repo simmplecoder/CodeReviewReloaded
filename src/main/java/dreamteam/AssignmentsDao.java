@@ -26,12 +26,11 @@ import representations.AssignmentsRequestFormat;
 @Path("/assignments")
 public class AssignmentsDao {
 	
-	public ArrayList<Assignment> fetchAssignments() {
+	public ArrayList<Assignment> fetchAssignments(String course_id) {
 		ArrayList<Assignment> assignments = new ArrayList<Assignment>();
-		System.out.println("helloWorld");
 		try {
 			Statement stmt = Amsterdam.getConn().createStatement();
-			String sqlQuery = "select * from code_review.assignment;";
+			String sqlQuery = "select * from code_review.assignment where course_id="+course_id+";";
 			ResultSet rs = stmt.executeQuery(sqlQuery);
 			
 			while(rs.next()) {
@@ -42,8 +41,7 @@ public class AssignmentsDao {
 				assignments.add(assignment);
 			}
 		} catch (Exception e) {
-			System.out.println("my v derme");
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 		
 		if(assignments.size() == 0) {
@@ -58,9 +56,10 @@ public class AssignmentsDao {
     @Produces(MediaType.APPLICATION_JSON)
 	public Response getAssignments(String json) {
 		
-		ArrayList<Assignment> fetchedAssignments = fetchAssignments();
+		
         AssignmentsRequestFormat assignmentsrequest = new Gson().fromJson(json, AssignmentsRequestFormat.class);
-
+        ArrayList<Assignment> fetchedAssignments = fetchAssignments(assignmentsrequest.id);
+        
         String courses = new Gson().toJson(fetchedAssignments);
         
         return Response.ok(courses, MediaType.APPLICATION_JSON_TYPE).build();
