@@ -1,20 +1,7 @@
 function assignments_loader(course_id) {
-  var params = { "username" : "ibro@nu.edu.kz", "id" : course_id };
-  var request = $.ajax({
-        type: "POST",
-        url: "services/assignments",
-        contentType: "application/json",
-        async: false,
-        data: JSON.stringify(params)
-    });
-  
-  let assignments;
-    request.success(function (data, textStatus, xhr) {
-          console.log(data);
-          assignments = JSON.parse(data);
-    });
-   
-    
+    let params = {"id" : course_id};
+    let assignments = items_loader("assignments", params);
+
 //    let assignments = [{"title" : "Implement Python code", "description" : "implement in a fast way", "id" : "id001"}, 
 //        {"title" : "Implement Python file", "description" : "code in a fast way", "id" : "id001"}];
     
