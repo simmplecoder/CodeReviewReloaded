@@ -31,21 +31,15 @@ function assignments_loader(course_id) {
         let $infoDiv = $("<div>").addClass("w3-container w3-hide w3-padding-24").appendTo($adiv);
     
         $button.click(function() {
-        		var description = assignment["description"];
+            let description = assignment["description"];
             let $div2 = $infoDiv;
             
             $div2.empty();
             $div2.text(assignment["description"]);
-            var $uploadView = getUploadView(); 
+            let $uploadView = getUploadView();
             $div2.append($uploadView);
 
-            if ($div2.hasClass("w3-hide")) {
-                $div2.removeClass("w3-hide");
-                $div2.addClass("w3-show");
-            } else {
-                $div2.addClass("w3-hide");
-                $div2.removeClass("w3-show");
-            }
+            toggle($div2);
         });
 
         $divmain.append($adiv)
