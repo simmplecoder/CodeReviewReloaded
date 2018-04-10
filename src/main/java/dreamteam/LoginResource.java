@@ -32,7 +32,7 @@ public class LoginResource {
         if (!keeper.exists(username, password)) {
             builder = Response.status(Response.Status.UNAUTHORIZED);
         } else {
-            builder = Response.ok("home.html", MediaType.TEXT_PLAIN_TYPE);
+            builder = Response.ok("home.jsp", MediaType.TEXT_PLAIN_TYPE);
         }
 
         return builder.build();

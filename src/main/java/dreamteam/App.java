@@ -1,6 +1,5 @@
 package dreamteam;
 
-import auth.PasswordKeeper;
 import auth.UnencryptedPasswordKeeper;
 
 import javax.servlet.ServletContext;
@@ -8,15 +7,9 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 
-import com.jcraft.jsch.JSchException;
-
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import java.sql.SQLException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -41,10 +34,11 @@ public class App extends Application {
             System.out.println(realPath);
             file.createNewFile(); // if file already exists will do nothing
             UnencryptedPasswordKeeper keeper = new UnencryptedPasswordKeeper(realPath);
-            singletons.add(new LoginResource(keeper));
-            singletons.add(new RegisterResource(keeper));
-            singletons.add(new CoursesDao());
-            singletons.add(new AssignmentsDao());
+//            singletons.add(new LoginResource(keeper));
+//            singletons.add(new RegisterResource(keeper));
+//            singletons.add(new CoursesDao());
+//            singletons.add(new AssignmentsDao());
+            singletons.add(new RequestFilter(keeper));
         } catch (IOException e) {
             e.printStackTrace();
         }

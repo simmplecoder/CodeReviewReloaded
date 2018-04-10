@@ -34,7 +34,7 @@ public class RegisterResource {
 
         if (keeper.register(registerAttempt.email, registerAttempt.password))
         {
-            return Response.ok("home.html", MediaType.TEXT_PLAIN_TYPE).build();
+            return Response.ok("home.jsp", MediaType.TEXT_PLAIN_TYPE).build();
         }
 
         return Response.status(Response.Status.BAD_REQUEST.getStatusCode(),

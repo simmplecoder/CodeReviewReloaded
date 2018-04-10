@@ -1,3 +1,9 @@
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%
+	if (session.getAttribute("username") != null) {
+		response.sendRedirect("/home.jsp");
+	}
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -103,7 +109,7 @@
         {
             warningText = "Unknown error occured"
         }
-        $("$warningLogin").text = warningText;
+        $("#warningLogin").text = warningText;
     }
 
     function sendRegistrationRequest(params)
