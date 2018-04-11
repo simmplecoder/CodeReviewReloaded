@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%
 	if (session.getAttribute("username") != null) {
-		response.sendRedirect("/home.jsp");
+		response.sendRedirect("home.jsp");
 	}
 %>
 <!DOCTYPE html>
