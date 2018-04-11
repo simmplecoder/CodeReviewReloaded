@@ -1,4 +1,6 @@
-function getFiles() {
+function getFiles(submission_id) {
+	var params = { "id" : submission_id};
+	// var files = make_request("files", params);
 
 	var files = [{"name":"main.cpp", "id" : "id01"}, {"name":"vector.cpp", "id" : "id01"}];
 	
@@ -15,7 +17,7 @@ function getFiles() {
 		$button.click(function() {
 			$li.removeAttr('class');
 			$div.empty();
-			$div.append(createColoredCode(data));
+			$div.append(createColoredCode(file['id']));
 			PR.prettyPrint();
 
 			toggle($div, $button);

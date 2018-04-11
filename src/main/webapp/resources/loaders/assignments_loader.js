@@ -1,9 +1,9 @@
 function assignments_loader(course_id) {
     let params = {"id" : course_id};
-    let assignments = items_loader("assignments", params);
+    let assignments = make_request("assignments", params);
 
-//    let assignments = [{"title" : "Implement Python code", "description" : "implement in a fast way", "id" : "id001"}, 
-//        {"title" : "Implement Python file", "description" : "code in a fast way", "id" : "id001"}];
+   // let assignments = [{"title" : "Implement Python code", "description" : "implement in a fast way", "id" : "id001"}, 
+       // {"title" : "Implement Python file", "description" : "code in a fast way", "id" : "id001"}];
     
     let $divmain = $("<div>");
     
@@ -23,7 +23,7 @@ function assignments_loader(course_id) {
             
             $div2.empty();
             $div2.text(assignment["description"]);
-            let $uploadView = getUploadView();
+            let $uploadView = getUploadView(assignment["id"]);
             $div2.append($uploadView);
 
             toggle($div2);

@@ -1,4 +1,4 @@
-function createColoredCode(data) {
+function createColoredCode(file_id) {
     const TAG_LI = "<li>";
     const TAG_DIV = "<div>";
     const TAG_OL = "<ol>";
@@ -7,12 +7,17 @@ function createColoredCode(data) {
 
     var $maincode = $("<div>");
 
-	var comments = [];
+    var comments = [];
 
     var startLine, endLine;
     var arrayPre = [];
     var editWindowOpened = false;
     var $editBlockRef;
+
+    // var params = { "id" : file_id };
+    // var fileArr = make_request("file", params);
+    // data = fileArr[0];
+
 
     REUSE = {
         createCodeLine: function(content, lineNumber) {
@@ -38,14 +43,14 @@ function createColoredCode(data) {
 
             $div.append(" - " + data['comment']);
             $div.data("multiply", 5);
-			$div.data("full_comment", data['comment']);
+            $div.data("full_comment", data['comment']);
             $div.data("lineNumber", line);
 
-			$div.on("click", function() {
+            $div.on("click", function() {
                 var multiply = $(this).data("multiply");
-				$(this).height($(this).height() * multiply);
+                $(this).height($(this).height() * multiply);
                 $(this).data("multiply", 1 / multiply);
-			});
+            });
 
             $div.mouseup(function() {
                 endLine = $(this).data("lineNumber");
@@ -69,8 +74,8 @@ function createColoredCode(data) {
         return ((aIndex < bIndex) ? -1 : ((aIndex > bIndex) ? 1 : 0));
     }
 
-    function loadAndSortComments(data) {
-            $.each( data, function( key, val ) {
+    function loadAndSortComments(dataComments) {
+            $.each( dataComments, function( key, val ) {
                 comments.push(val);
             })
             comments.sort(SortByEndline);
@@ -79,16 +84,16 @@ function createColoredCode(data) {
     loadAndSortComments(data['comments']);
 
     function loadLines (data, parent) {
-		// $(parent).html("");
+        // $(parent).html("");
 
-		arrayPre = [];
+        arrayPre = [];
 
         parent.empty();
-		var $ol = $(TAG_OL, {id:"oldMainCode"}).appendTo(parent);
+        var $ol = $(TAG_OL, {id:"oldMainCode"}).appendTo(parent);
         var line = 1;
         var current = 0;
 
-		console.log($(parent));
+        console.log($(parent));
 
         $.each( data, function( key, val ) {
             var $pre = $(TAG_PRE).addClass("prettyprint").appendTo($ol);
@@ -114,17 +119,20 @@ function createColoredCode(data) {
         var $input = $("<input>").appendTo($editBlock);
 
         var $okButton = $("<button>").text("OK").appendTo($editBlock).click(function() {
-			var comment = {
-			         "start" : startLine,
-			         "end" : endLine,
-			         "author" : "defaultUser",
-			         "comment" : $input.val()
-			}
+            var comment = {
+                    "file_id" : file_id, 
+                    "start" : startLine,
+                    "end" : endLine,
+                    "comment" : $input.val()
+            }
 
             $editBlockRef.remove();
             editWindowOpened = false;
-			comments.push(comment);
-			console.log(comments);
+            comments.push(comment);
+            console.log(comments);
+
+            // make_request("addComment", comment); // TODO
+
             loadLines(data["lines"], $maincode);
             PR.prettyPrint();
         });
@@ -142,6 +150,5 @@ function createColoredCode(data) {
     loadLines(data["lines"], $maincode);
     // PR.prettyPrint();
 
-    console.log("hello JS2");
     return $maincode;
 }

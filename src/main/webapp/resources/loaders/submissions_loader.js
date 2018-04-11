@@ -1,6 +1,6 @@
 function submissions_loader(assignment_id) {
-	// var params = { "username" : "ibro@nu.edu.kz", "id" : assignment_id};
-//	var submissions = items_loader("submissions", params);
+	var params = { "id" : assignment_id};
+	// var submissions = make_request("submissions", params);
 
 	var submissions = [{"title":"by Ibrakhim Ilyassov", "id" : "id01"}, {"title":"by Anuar Maratkhan", "id" : "id02"}];
 	

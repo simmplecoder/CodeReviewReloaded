@@ -1,8 +1,8 @@
 function courses_loader() {
 	var params = { "username" : "ibro@nu.edu.kz" };
-    var courses = items_loader("courses", params);
+    var courses = make_request("courses", params);
 
-//	var courses = [{"title" : "CSCI 151", "id" : "id0"}, {"title" : "CSCI 152", "id" : "id1"}];
+	// var courses = [{"title" : "CSCI 151", "id" : "id0"}, {"title" : "CSCI 152", "id" : "id1"}];
 	
 	var $ul = $("<ul>").addClass("w3-ul w3-hoverable");
 	
