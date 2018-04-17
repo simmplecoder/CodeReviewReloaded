@@ -83,8 +83,6 @@
 	"use strict";
 
 	
-
-	
     function sendLoginRequest(params)
     {
         var request = $.ajax(
@@ -181,6 +179,15 @@
     {
         currentAuthorizationMethod();
     })
+    
+    
+    
+	$("#login_div").keypress(function(e) {
+	    if(e.which == 13) {
+	    		currentAuthorizationMethod();
+	    }
+	});
+    
 </script>
 
 </html>
