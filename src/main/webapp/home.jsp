@@ -42,8 +42,24 @@
 <body>
 	
 <header class="w3-container w3-green">
-  <h1>Code Review Tool</h1>
+	<div class="w3-row">
+		<div class = "w3-col m11 l11">
+			<h1>Code Review Tool</h1>
+		</div>
+		<div class = "w3-col m1 l1">
+			  <button class = "w3-button w3-white" onclick="logout();"> Exit
+			  </button>
+		</div>
+	</div>
 </header>
+
+	
+<%-- <% if(session.getAttribute("username").equals("user")) { %>
+	
+	<h1> hello user </h1>
+
+<% } %> --%>
+	
 
 <div class="w3-container">
   <div class="w3-row">
@@ -69,6 +85,18 @@
 <script>
 
 	$("#course_list").append(courses_loader());
+	
+	function logout() {
+		var request = $.ajax({
+            type: "POST",
+            url: "services/logout",
+            async: false
+        });
+
+        request.success(function (data, textStatus, xhr) {
+            window.location = data;
+        })
+	}
 
 </script>
 
