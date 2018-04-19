@@ -2,9 +2,7 @@ package dreamteam;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Properties;
 
 import com.jcraft.jsch.JSch;
@@ -23,6 +21,11 @@ public class Conn {
 	int remotePort = 3306;
 	String remoteUser = "root";
 	String remotePass = "rocketman";
+
+	String mongoHost = "127.0.0.1";
+	int mongoPort = 27017;
+	String mongoAdmin = "admin";
+	String mongoPass = "rocketman";
 	
 	Connection conn = null;
 	

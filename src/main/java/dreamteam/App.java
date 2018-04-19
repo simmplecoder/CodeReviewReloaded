@@ -22,22 +22,20 @@ public class App extends Application {
     public App(@Context ServletContext context) {
         try {
             URL path = UnencryptedPasswordKeeper.class.getClassLoader().getResource(".");
-            System.out.println(path.getPath());
             String realPath = path.getPath();
-            String[] splitedPath = realPath.split("/");
+            String[] splittedPath = realPath.split("/");
             realPath = "";
-            for (int i = 0; i < splitedPath.length - 2; i++) {
-                realPath += splitedPath[i] + "/";
+            for (int i = 0; i < splittedPath.length - 2; i++) {
+                realPath += splittedPath[i] + "/";
             }
             realPath += "credentials.txt";
             File file = new File(realPath);
-            System.out.println(realPath);
             file.createNewFile(); // if file already exists will do nothing
             UnencryptedPasswordKeeper keeper = new UnencryptedPasswordKeeper(realPath);
 //            singletons.add(new LoginResource(keeper));
 //            singletons.add(new RegisterResource(keeper));
-//            singletons.add(new CoursesDao());
-//            singletons.add(new AssignmentsDao());
+            singletons.add(new CoursesDao());
+            singletons.add(new AssignmentsDao());
             singletons.add(new RequestFilter(keeper));
         } catch (IOException e) {
             e.printStackTrace();
