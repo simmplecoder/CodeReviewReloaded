@@ -85,12 +85,18 @@
 	
     function sendLoginRequest(params)
     {
+    	 	var warningText;
         var request = $.ajax(
             {
                 type: "POST",
                 url: "services/login",
                 contentType: "application/json",
-                data: JSON.stringify(params)
+                data: JSON.stringify(params),
+                statusCode: {
+                		401: function() {
+                			$("#warningLogin").text("Invalid username and/or password");
+                      }
+                  }
             }
         );
 
@@ -98,16 +104,6 @@
             $("#warningLogin").text("Successful login");
             window.location = data;
         });
-
-        var warningText;
-        if (request.status === 401) {
-            warningText = "Invalid username and/or password";
-        }
-        else
-        {
-            warningText = "Unknown error occured"
-        }
-        $("#warningLogin").text = warningText;
     }
 
     function sendRegistrationRequest(params)
