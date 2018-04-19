@@ -1,6 +1,8 @@
 package dreamteam;
 
 import auth.UnencryptedPasswordKeeper;
+import datagatherer.AssignmentsDao;
+import datagatherer.CoursesDao;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
@@ -32,8 +34,6 @@ public class App extends Application {
             File file = new File(realPath);
             file.createNewFile(); // if file already exists will do nothing
             UnencryptedPasswordKeeper keeper = new UnencryptedPasswordKeeper(realPath);
-//            singletons.add(new LoginResource(keeper));
-//            singletons.add(new RegisterResource(keeper));
             singletons.add(new CoursesDao());
             singletons.add(new AssignmentsDao());
             singletons.add(new RequestFilter(keeper));
