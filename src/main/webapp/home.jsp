@@ -70,7 +70,8 @@
   <div class="w3-row">
         <div class="w3-col m3 l3 w3-text-green" style="padding: 5px; height: 500px;">
             <div id="addCourseDiv">
-            <button class="w3-border w3-button" id="addButton" onclick="addCourseBlock()"> Add course </button>
+            <button class="w3-border w3-button" id="addButton" onclick="addCourseBlock()"> &#8724; course </button>
+            <button class="w3-border w3-button" id="addButton" onclick="addAssignBlock()"> &#8724; assignment </button>
             </div>  
 
             <div id = "course_list" class = "w3-border w3-round"></div>
@@ -102,12 +103,15 @@
     }
 
     var $addBlock;
+    var $input;
+
+    var courseWin = false;
 
     function initCourseBlock() {
         $addBlock = $("<div>").appendTo("#addCourseDiv");
         $addBlock.addClass("addBlock w3-hide");
 
-        var $input = $("<input>").attr("placeholder", "Course name").appendTo($addBlock);
+        $input = $("<input>").attr("placeholder", "Course name").appendTo($addBlock);
         $input.addClass("inputCourse");
 
         var $okButton = $("<button>").text("OK").appendTo($addBlock).click(function() {
@@ -132,7 +136,13 @@
 
 
     function addCourseBlock() {
+        $input.attr("placeholder", "Course name")
         toggle($addBlock);    
+    }
+
+    function addAssignBlock() {
+        $input.attr("placeholder", "Assignment name")
+        toggle($addBlock);        
     }
 
 
