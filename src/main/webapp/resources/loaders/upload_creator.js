@@ -1,3 +1,6 @@
+var filesToUpload = [];
+var files;
+
 function getUploadView(assignment_id) {
 
 	let $uploadView = $("<div>");
@@ -7,32 +10,18 @@ function getUploadView(assignment_id) {
     var filesStr = [];
 
     $input.change( function() {
-        var files = this.files;
-        filesStr.length = 0
-        var filesToUpload = [];
-
+        files = this.files;
+       
         for (let i = 0; i < files.length; i++) {
-                var content = "";
-                // console.log(files[i].name.split('.').pop());
                 var reader = new FileReader();
                 reader.onload = (function(reader) {
-                    return function(i) {
-                        filesToUpload.push({"filename" : files[i], "content" : reader.result});
+                    return function(event) {
+                        filesToUpload.push(reader.result);
                     }
                 }) (reader);
 
                 reader.readAsText(files[i]);
         }
-        console.log(files)
-        console.log(filesToUpload);
-        for(let i = 0; i < files.length; i++) {
-            console.log(i);
-            console.log(filesToUpload[i]);
-            // console.log(filesToUpload["0"]);
-            //["filename"] = files[i].name;
-            console.log(files[i].name);
-        }
-        console.log(filesToUpload);
     });
 
     $uploadView.append($("<br/>"));
@@ -41,40 +30,43 @@ function getUploadView(assignment_id) {
 
     let $submissionsList = submissions_loader(assignment_id);
     
-    $uploadView.append(getUploadBtn($submissionsList, $uploadView, filesStr, assignment_id));
+    $uploadView.append(getUploadBtn($submissionsList, $uploadView, assignment_id));
 
     $uploadView.append($submissionsList);
     
     return $uploadView;
 }
 
-function getUploadBtn($submissionsList, $uploadView, filesStr, assignment_id) {
+function getUploadBtn($submissionsList, $uploadView, assignment_id) {
     let $uploadButton = $("<button>").text("Upload").click(function() {
-        console.log(filesStr)
-	    let uploadedFilesJson = {
-	        "files": filesStr,
-	    }
-	
+    		var temp = [];
+    		for (var i = 0; i < files.length; i++) {
+    			temp.push({"filename" : files[i].name, "content" : filesToUpload[i]});
+    		}
+    		
+    		var data = {"assignment_id" : assignment_id, "files" : temp};
+    	
+    		console.log(JSON.stringify(data));
+	    
 	    $submissionsList.empty();
-	    $submissionsList = submissions_loader(assignment_id);
-	    $uploadView.append($submissionsList);
 	
-        console.log(uploadedFilesJson)
-
 	    // Should be implemented, when backend will be ready
-	    // $.ajax({
-	    //     type: "POST",
-	    //     url: "services/UPLOAD",          // SHOULD Be Changed
-	    //     contentType: "application/json",
-	    //     data: JSON.stringify(uploadedFilesJson), 
-	    //     success: function(result){
-	    //         console.log("Success");
-	    //     },
-	    //     error: function() {
-	    //         alert("Failed to load files.")
-	    //     },
-	    // });
+	     $.ajax({
+	         type: "POST",
+	         url: "services/upload",          // SHOULD Be Changed
+	         contentType: "application/json",
+	         data: JSON.stringify(data),
+	         success: function(result){
+	             console.log("Success");
+	             $submissionsList = submissions_loader(assignment_id);
+	             $uploadView.append($submissionsList);
+	         },
+	         error: function() {
+	             alert("Failed to load files.")
+	         },
+	     });
 
+	    filesToUpload = [];
     });
 
     return $uploadButton;

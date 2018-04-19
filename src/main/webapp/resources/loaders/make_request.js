@@ -9,8 +9,6 @@ function make_request(url, params) {
 
     var result = [];
     request.success(function (response) {
-
-    console.log("Hello")
         result = response;
     });
 
