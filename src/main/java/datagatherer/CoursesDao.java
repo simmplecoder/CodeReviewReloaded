@@ -1,7 +1,6 @@
-package dreamteam;
+package datagatherer;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -9,24 +8,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.google.gson.Gson;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
 
-import model.Student;
-import representations.AssignmentsRequestFormat;
 import representations.CoursesRequestFormat;
-import model.Instructor;
 import model.Course;
-import model.Assignment;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Properties;
 
 @Path("/courses")
 public class CoursesDao {
@@ -35,7 +23,7 @@ public class CoursesDao {
 		ArrayList<Course> courses = new ArrayList<Course>();
 
 		try {			
-			Statement stmt = Amsterdam.getConn().createStatement();
+			Statement stmt = Conn.getConnection().createStatement();
 			String sqlQuery = "select * from code_review.course;";
 			ResultSet rs = stmt.executeQuery(sqlQuery);
 			
