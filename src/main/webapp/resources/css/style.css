@@ -32,3 +32,28 @@
 #oldMainCode li  {
     height: 12px;
 }
+
+#addButton {
+    width: 150px;
+    color: white;
+    background: #29c641;
+    margin-bottom: 10px;
+}
+
+.addBlock {
+    border: 1px solid black;
+    background: #29c641;
+    margin-bottom: 10px;
+}
+
+.inputCourse {
+    margin: 5px;
+    display: block;
+}
+
+.buttonCourse {
+    margin: 5px;
+    background: white;
+
+    border: 1px solid black;
+}
