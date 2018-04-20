@@ -9,8 +9,8 @@
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-
-	<link rel="stylesheet" href="jquery-ui.css">
+	
+  	<link href="resources/css/jquery-ui.css" rel="stylesheet">
   	
   	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -36,19 +36,19 @@
 
 	<div class = "w3-container" style="width: 70%; margin:auto;">
 		<div class = "w3-row">
-			<div class = "w3-col m3 l3 w3-left">
+			<div class = "w3-col m3 l3 w3-left w3-cell-middle">
 				<p> From: <input type="text" id="datepickerFrom"></p>
 			</div>
-			<div class = "w3-col m4 l4 w3-center">
+			<div class = "w3-col m4 l4 w3-center w3-cell-middle">
 				<p> To: <input type="text" id="datepickerTo"></p>
 			</div>
-			<div class = "w3-col m4 l4">
+			<div class = "w3-col m4 l4 w3-cell-middle">
 				<p> <input class="w3-check" type="checkbox" id = "checkboxlogs" > Login logs.</p>
 				<p> <input class="w3-check" type="checkbox" id = "checkboxregisters" > Register logs.</p>
 				<p> <input class="w3-check" type="checkbox" id = "checkboxuploads" > Upload logs.</p>
 				
 			</div>
-			<div class = "w3-col m1 l1 w3-right">
+			<div class = "w3-col m1 l1 w3-right w3-cell-middle">
 				<p> <button class="w3-button w3-green" onclick="findLogs();"> Find </button> </p>
 			</div>
 		</div>
