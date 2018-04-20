@@ -90,9 +90,17 @@
 		var from = $("#datepickerFrom").val();
 		var to = $("#datepickerTo").val();
 		
-		var types = [$("#checkboxlogs").is(':checked'), $("#checkboxregisters").is(':checked'), $("#checkboxuploads").is(':checked')];
+		var types = [];
+		if ($("#checkboxlogs").is(':checked'))
+			types.push("login");
 		
-		var params = {"from" : from, "to" : to, "login" : types[0], "register" : types[1], "upload" : types[2]};
+		if ($("#checkboxregisters").is(':checked'))
+			types.push("register");
+		
+		if ($("#checkboxuploads").is(':checked'))
+			types.push("upload");
+	
+		var params = {"from" : from, "to" : to, "types": types};
 		
 		console.log(JSON.stringify(params));
 		
