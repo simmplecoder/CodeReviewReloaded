@@ -34,7 +34,7 @@
 	    </div>
 	</header>
 
-	<div class = "w3-container" style="width: 70%; margin:auto;">
+	<div class = "w3-container">
 		<div class = "w3-row">
 			<div class = "w3-col m3 l3 w3-left w3-cell-middle">
 				<p> From: <input type="text" id="datepickerFrom"></p>
@@ -96,18 +96,18 @@
 		
 		console.log(JSON.stringify(params));
 		
-		var logs = make_request("loggingsearch", params);
+		/* var logs = make_request("loggingsearch", params); */
 		
-		var logs = [{"title" : "Failing login service."}, {"title" : "Worked on logout button."}, {"title" : "Crashing course to login service."}];
+		var logs = [{"type" : "Login", "message" : "Failing login service.", "date" : "12.04.2018"}, {"type" : "Register", "message" : "Failing register service.", "date" : "20.04.2018"}, {"type" : "Upload", "message" : "Upload login service.", "date" : "04.04.2018"}];
 		
 		$("#results").empty();
 		
-		var $ul = $("<ul>");
+		var $ul = $("<ul class ='w3-ul'>");
 		for (let i = 0; i < logs.length; i++) {
 			let log = logs[i];
 			let $li = $("<li>");
 			$li.addClass("w3-padding-small w3-hover-pale-green");
-			$li.text(log["title"]);
+			$li.text(log["type"] + " : " + log["date"] + " : " + log["message"]);
 			$ul.append($li);
 		}
 		
