@@ -113,12 +113,19 @@
             url: "services/register",
             contentType: "application/json",
             async: false,
-            data: JSON.stringify(params)
+            data: JSON.stringify(params), 
+            statusCode: {
+        		 409: function() {
+        			$("#warningLogin").text("User with such email is taken.");
+              }
+          }
         });
 
         request.success(function (data, textStatus, xhr) {
             window.location = data;
         })
+        
+        
     }
 
     function performLogin(){
