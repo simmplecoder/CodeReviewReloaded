@@ -47,8 +47,10 @@
             <h1>Code Review Tool</h1>
         </div>
         <div class = "w3-col m1 l1">
+        <p>
               <button class = "w3-button w3-white" onclick="logout();"> Exit
               </button>
+              </p>
         </div>
     </div>
 </header>
