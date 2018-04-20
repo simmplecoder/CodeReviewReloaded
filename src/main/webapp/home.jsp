@@ -121,7 +121,7 @@
                 "course" : $input.val()
             }
             // make_request("addCourse", course) // TODO
-
+	
             $input.val("");
             toggle($addBlock);    
         });

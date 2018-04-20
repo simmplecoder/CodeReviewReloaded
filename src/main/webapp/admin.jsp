@@ -16,6 +16,8 @@
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<script type="text/javascript" src="resources/loaders/make_request.js"></script>
 
 </head>
 <body>
@@ -35,34 +37,27 @@
 	<div class = "w3-container" style="width: 70%; margin:auto;">
 		<div class = "w3-row">
 			<div class = "w3-col m3 l3 w3-left">
-				<p>From: <input type="text" id="datepickerFrom"></p>
+				<p> From: <input type="text" id="datepickerFrom"></p>
 			</div>
 			<div class = "w3-col m4 l4 w3-center">
-				<p>To: <input type="text" id="datepickerTo"></p>
+				<p> To: <input type="text" id="datepickerTo"></p>
 			</div>
-			<div class = "w3-col m4 l4 w3-center">
-				<p> Keyword: <input type="text" name="search" > </p>
+			<div class = "w3-col m4 l4">
+				<p> <input class="w3-check" type="checkbox" id = "checkboxlogs" > Login logs.</p>
+				<p> <input class="w3-check" type="checkbox" id = "checkboxregisters" > Register logs.</p>
+				<p> <input class="w3-check" type="checkbox" id = "checkboxuploads" > Upload logs.</p>
+				
 			</div>
 			<div class = "w3-col m1 l1 w3-right">
-				<p> <button class="w3-button w3-green" onclick="getdate();"> Find </button> </p>
+				<p> <button class="w3-button w3-green" onclick="findLogs();"> Find </button> </p>
 			</div>
 		</div>
-		
-		<div class = "w3-row">
-			
-
-		</div>
-
+	
 		<div class = "w3-row w3-center">
-
-			<div class = "w3-col m12 l12" style="margin-top: 10px; background-color: #E8FDE1;">
-				<p id = "datelog"> empty. </p>
+			<div id = "results" class = "w3-col m12 l12" style="margin-top: 10px;">
 			</div>
-
 		</div>
-
 	</div>
-
 </body>
 
 <script>
@@ -91,9 +86,30 @@
 		});
 	});
 
-	function getdate() {
-		console.log($("#datepickerTo").val());
-		console.log($("#datepickerFrom").val());
+	function findLogs() {
+		var from = $("#datepickerFrom").val();
+		var to = $("#datepickerTo").val();
+		
+		var types = [$("#checkboxlogs").is(':checked'), $("#checkboxregisters").is(':checked'), $("#checkboxuploads").is(':checked')];
+		
+		var params = {"from" : from, "to" : to, "types" : types};
+		
+		/* var logs = make_request("loggingsearch", params); */
+		
+		var logs = [{"title" : "Failing login service."}, {"title" : "Worked on logout button."}, {"title" : "Crashing course to login service."}];
+		
+		$("#results").empty();
+		
+		var $ul = $("<ul>");
+		for (let i = 0; i < logs.length; i++) {
+			let log = logs[i];
+			let $li = $("<li>");
+			$li.addClass("w3-padding-small w3-hover-pale-green");
+			$li.text(log["title"]);
+			$ul.append($li);
+		}
+		
+		$("#results").append($ul);
 	}
 
 </script>
