@@ -92,9 +92,11 @@
 		
 		var types = [$("#checkboxlogs").is(':checked'), $("#checkboxregisters").is(':checked'), $("#checkboxuploads").is(':checked')];
 		
-		var params = {"from" : from, "to" : to, "types" : types};
+		var params = {"from" : from, "to" : to, "login" : types[0], "register" : types[1], "upload" : types[2]};
 		
-		/* var logs = make_request("loggingsearch", params); */
+		console.log(JSON.stringify(params));
+		
+		var logs = make_request("loggingsearch", params);
 		
 		var logs = [{"title" : "Failing login service."}, {"title" : "Worked on logout button."}, {"title" : "Crashing course to login service."}];
 		
