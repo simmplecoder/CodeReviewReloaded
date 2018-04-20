@@ -35,3 +35,11 @@ The user can navigate in Code Review Tool from home page up to specific submissi
 - `/CodeReviewTool/services/file/{"email" : "student@nu.edu.kz", "secret_key" : key, "file_id" : "file001"}` -> should return CommentedFile JSON object whose code is already on the server.
 
 *** {} - are params sent as JSON.
+
+
+### `Admin`:
+- Admin would like to perform several actions.
+- The admin has search function that sends request to `/CodeReviewTool/services/loggingsearch/{"from" : "yy-mm-dd", "to" : "yy-mm-dd", "keyword" : "login"}` and the backend should return logs as JSONArray.
+- Turn on/off logging. Admin sends requests `/CodeReviewTool/services/loggingswitch` should return just a OK response.
+- Get status of loggin. `/CodeReviewTool/services/loggingison` should return the status of logging either YES or NO.
+
