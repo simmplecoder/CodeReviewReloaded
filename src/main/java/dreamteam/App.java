@@ -1,6 +1,6 @@
 package dreamteam;
 
-import auth.UnencryptedPasswordKeeper;
+import com.jcraft.jsch.JSchException;
 import datagatherer.AssignmentsDao;
 import datagatherer.CoursesDao;
 
@@ -9,10 +9,7 @@ import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Context;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,21 +20,10 @@ public class App extends Application {
 
     public App(@Context ServletContext context) {
         try {
-            URL path = UnencryptedPasswordKeeper.class.getClassLoader().getResource(".");
-            String realPath = path.getPath();
-            String[] splittedPath = realPath.split("/");
-            realPath = "";
-            for (int i = 0; i < splittedPath.length - 2; i++) {
-                realPath += splittedPath[i] + "/";
-            }
-            realPath += "credentials.txt";
-            File file = new File(realPath);
-            file.createNewFile(); // if file already exists will do nothing
-            UnencryptedPasswordKeeper keeper = new UnencryptedPasswordKeeper(realPath);
             singletons.add(new CoursesDao());
             singletons.add(new AssignmentsDao());
-            singletons.add(new RequestFilter(keeper));
-        } catch (IOException e) {
+            singletons.add(new RequestFilter());
+        } catch (JSchException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
