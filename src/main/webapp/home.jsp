@@ -3,6 +3,9 @@
     if (session.getAttribute("username") == null) {
         response.sendRedirect("index.jsp");
     }
+    if (session.getAttribute("username").equals("admin")) {
+        response.sendRedirect("admin.jsp");
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -54,14 +57,6 @@
         </div>
     </div>
 </header>
-
-    
-<%-- <% if(session.getAttribute("username").equals("user")) { %>
-    
-    <h1> hello user </h1>
-
-<% } %> --%>
-    
 
 <div class="w3-container">
   <div class="w3-row">

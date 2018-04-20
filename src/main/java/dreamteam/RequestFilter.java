@@ -3,6 +3,7 @@ package dreamteam;
 import com.google.gson.Gson;
 import com.jcraft.jsch.JSchException;
 import datagatherer.Conn;
+import representations.LogRequest;
 import representations.LoginAttempt;
 import representations.RegisterAttempt;
 
@@ -45,11 +46,10 @@ public class RequestFilter {
         String password = loginAttempt.password;
 
         Statement stmt = conn.createStatement();
-        String sql =
-                "select * from code_review.user where username=\'" + username +
+        String sql = "select * from code_review.user where username=\'" + username +
                 "\' and password=\'" + password + "\';";
         ResultSet rs = stmt.executeQuery(sql);
-        while(rs.next()) {
+        if(rs.next()) {
             session.setAttribute("isInstructor", rs.getInt("isInstructor"));
             session.setAttribute("username", username);
         }
@@ -88,9 +88,9 @@ public class RequestFilter {
 
         HttpSession session = request.getSession();
         RegisterAttempt registerAttempt = new Gson().fromJson(json, RegisterAttempt.class);
-        String email = registerAttempt.email;
+        String email = registerAttempt.username;
         String password = registerAttempt.password;
-        if (registerAttempt.email == null || registerAttempt.firstname == null
+        if (registerAttempt.username == null || registerAttempt.firstname == null
                 || registerAttempt.lastname == null || registerAttempt.password == null) {
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
@@ -106,29 +106,38 @@ public class RequestFilter {
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
                 return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                        "The user with the email already exists").build();
+                        "The user with the username already exists").build();
             }
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
 
     @POST
-    @Path("courses")
+    @Path("loggingsearch")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCourses(String json) {
-
-        return null;
+    public Response getLogs(String json) {
+        LogRequest log = new Gson().fromJson(json, LogRequest.class);
+        return Response.ok(LogManager.getLogs(log), MediaType.APPLICATION_JSON).build();
     }
 
-    @POST
-    @Path("assignments")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getAssignments(String json) {
-
-        return null;
-    }
+//    @POST
+//    @Path("courses")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getCourses(String json) {
+//
+//        return null;
+//    }
+//
+//    @POST
+//    @Path("assignments")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response getAssignments(String json) {
+//
+//        return null;
+//    }
 
     private Response redirection(String service) {
         URI uri = null;
