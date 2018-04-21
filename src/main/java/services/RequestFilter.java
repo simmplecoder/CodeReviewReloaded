@@ -282,23 +282,20 @@ public class RequestFilter {
                     "SELECT * FROM code_review.user " +
                     "WHERE username='" + instructor + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            int id = 0;
             if (rs.next()) {
-                id = rs.getInt("id");
+                int id = rs.getInt("id");
                 sqlQuery =
                         "INSERT INTO code_review.course(title, instructor_id) " +
                                 "VALUES('" + title + "', " + id + ");";
                 stmt.executeUpdate(sqlQuery);
 
-                sqlQuery = "SELECT * FROM code_review.course ORDER BY id DESC;";
+                sqlQuery = "SELECT LAST_INSERT_ID()";
                 rs = stmt.executeQuery(sqlQuery);
-                if (rs.next()) {
-                    int course_id = rs.getInt("id");
-                    sqlQuery =
-                            "INSERT INTO code_review.user_has_course(student_id, course_id)" +
-                            "VALUES(" + id + ", " + course_id + ");";
-                    stmt.executeUpdate(sqlQuery);
-                }
+                int course_id = Integer.parseInt(rs.getString(1));
+                sqlQuery =
+                        "INSERT INTO code_review.user_has_course(student_id, course_id)" +
+                                "VALUES(" + id + ", " + course_id + ");";
+                stmt.executeUpdate(sqlQuery);
             }
         } catch (SQLException | JSchException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
