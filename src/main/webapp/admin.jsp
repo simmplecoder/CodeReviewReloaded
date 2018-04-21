@@ -1,7 +1,12 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    
-
+<%@ page contentType="text/html;charset=UTF-8"%>
+<%
+    if (session.getAttribute("username") == null) {
+        response.sendRedirect("index.jsp");
+    }
+    if (!session.getAttribute("username").equals("admin")) {
+        response.sendRedirect("admin.jsp");
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,9 +109,9 @@
 		
 		console.log(JSON.stringify(params));
 		
-		/* var logs = make_request("loggingsearch", params); */
+		var logs = make_request("loggingsearch", params);
 		
-		var logs = [{"type" : "Login", "message" : "Failing login service.", "date" : "12.04.2018"}, {"type" : "Register", "message" : "Failing register service.", "date" : "20.04.2018"}, {"type" : "Upload", "message" : "Upload login service.", "date" : "04.04.2018"}];
+		// var logs = [{"types" : "Login", "message" : "Failing login service.", "date" : "12.04.2018"}, {"types" : "Register", "message" : "Failing register service.", "date" : "20.04.2018"}, {"types" : "Upload", "message" : "Upload login service.", "date" : "04.04.2018"}];
 		
 		$("#results").empty();
 		

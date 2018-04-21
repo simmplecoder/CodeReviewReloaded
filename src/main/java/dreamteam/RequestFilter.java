@@ -1,12 +1,13 @@
 package dreamteam;
 
+import datagatherer.Conn;
 import com.google.gson.Gson;
 import com.jcraft.jsch.JSchException;
-import datagatherer.Conn;
-import representations.LogRequest;
+import representations.LogRequestFormat;
 import representations.LoginAttempt;
 import representations.RegisterAttempt;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.*;
@@ -19,10 +20,17 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Path("")
 public class RequestFilter {
-    @Context HttpServletRequest request;
+    @Context
+    private HttpServletRequest request;
+    @Context
+    private ServletContext context;
+    private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Connection conn;
 
     RequestFilter() throws JSchException, SQLException, ClassNotFoundException {
@@ -50,14 +58,15 @@ public class RequestFilter {
                 "\' and password=\'" + password + "\';";
         ResultSet rs = stmt.executeQuery(sql);
         if(rs.next()) {
+            LogManager.addLog(username + " successfully logged in.",
+                    dateFormat.format(new Date()), "login", context);
             session.setAttribute("isInstructor", rs.getInt("isInstructor"));
             session.setAttribute("username", username);
-        }
-
-        if (session.getAttribute("username") == null) {
-            builder = Response.status(Response.Status.UNAUTHORIZED);
-        } else {
             builder = Response.ok("home.jsp", MediaType.TEXT_PLAIN);
+        } else {
+            LogManager.addLog(username + " tried to log in. HTTP 401 was returned.",
+                    dateFormat.format(new Date()), "login", context);
+            builder = Response.status(Response.Status.UNAUTHORIZED);
         }
         return builder.build();
     }
@@ -71,6 +80,9 @@ public class RequestFilter {
         if (redirection != null) {
             return redirection;
         }
+        LogManager.addLog(request.getSession().getAttribute("username")
+                        + " successfully logged out.",
+                dateFormat.format(new Date()), "login", context);
         request.getSession().removeAttribute("username");
         request.getSession().removeAttribute("isInstructor");
         return Response.ok("index.jsp", MediaType.TEXT_PLAIN).build();
@@ -88,26 +100,34 @@ public class RequestFilter {
 
         HttpSession session = request.getSession();
         RegisterAttempt registerAttempt = new Gson().fromJson(json, RegisterAttempt.class);
-        String email = registerAttempt.username;
+        String username = registerAttempt.email;
         String password = registerAttempt.password;
-        if (registerAttempt.username == null || registerAttempt.firstname == null
+        if (registerAttempt.email == null || registerAttempt.firstname == null
                 || registerAttempt.lastname == null || registerAttempt.password == null) {
+            LogManager.addLog("Some fields were null. HTTP 400 was returned.",
+                    dateFormat.format(new Date()), "register", context);
             throw new WebApplicationException(Response.Status.BAD_REQUEST);
         }
 
         Statement stmt = Conn.getConnection().createStatement();
         String sql = "insert into code_review.user(username, password, isInstructor)" +
-                "values(\'" + email + "\', \'" + password + "\', \'" + 0 + "\')";
+                "values(\'" + username + "\', \'" + password + "\', \'" + 0 + "\')";
         try {
             stmt.executeUpdate(sql);
-            session.setAttribute("username", email);
+            LogManager.addLog(username + " was successfully registered.",
+                    dateFormat.format(new Date()), "register", context);
+            session.setAttribute("username", username);
             session.setAttribute("isInstructor", 0);
             return Response.ok("home.jsp", MediaType.TEXT_PLAIN).build();
         } catch (SQLException e) {
             if (e.getErrorCode() == 1062) {
+                LogManager.addLog(username + " was taken. HTTP 409 was returned",
+                        dateFormat.format(new Date()), "register", context);
                 return Response.status(Response.Status.CONFLICT.getStatusCode(),
-                        "The user with the username already exists").build();
+                        "The user with the email already exists").build();
             }
+            LogManager.addLog("Insert to the database failed.",
+                    dateFormat.format(new Date()), "register", context);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
         }
     }
@@ -117,8 +137,23 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLogs(String json) {
-        LogRequest log = new Gson().fromJson(json, LogRequest.class);
-        return Response.ok(LogManager.getLogs(log), MediaType.APPLICATION_JSON).build();
+        LogRequestFormat log = new Gson().fromJson(json, LogRequestFormat.class);
+        return Response.ok(LogManager.getLogs(log, context), MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    @POST
+    @Path("loggingison")
+    @Produces(MediaType.TEXT_PLAIN)
+    public Response loggingIsOn() {
+        String status = LogManager.isOn(context) ? "YES" : "NO";
+        return Response.ok(status, MediaType.TEXT_PLAIN_TYPE).build();
+    }
+
+    @POST
+    @Path("loggingswitch")
+    public Response switchLogStatus() {
+        LogManager.setLogStatus(!LogManager.isOn(context), context);
+        return Response.ok().build();
     }
 
 //    @POST

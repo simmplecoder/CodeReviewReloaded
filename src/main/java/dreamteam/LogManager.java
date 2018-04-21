@@ -4,35 +4,61 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import representations.LogModel;
-import representations.LogRequest;
+import representations.LogRequestFormat;
 
+import javax.servlet.ServletContext;
 import java.io.*;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 class LogManager {
-    static void addLog(LogModel log) {
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    static void setLogStatus(boolean on, ServletContext context) {
         try {
-            File file = new File("logs.json");
-            String content = new Scanner(file).useDelimiter("\\Z").next();
-
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("message", log.message);
-            jsonObject.addProperty("date", log.date);
-            jsonObject.addProperty("type", log.type);
-
-            content = content.substring(0, content.lastIndexOf(']')) + "," + jsonObject + "]";
+            String status = on ? "on" : "off";
+            URL url = context.getResource("/WEB-INF/");
+            File file = new File(url.getPath() + "logStatus.json");
             FileOutputStream os = new FileOutputStream(file, false);
-            os.write(content.getBytes());
+            file.createNewFile();
+            os.write(("{\"status\":\"" + status + "\"}").getBytes());
             os.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    static String getLogs(LogRequest request) {
+    static void addLog(String message, String date, String type, ServletContext context) {
+        if (!isOn(context)) {
+            return;
+        }
         try {
-            String content = new Scanner(new File("logs.json")).useDelimiter("\\Z").next();
+            File file = getLogFile(context);
+            String content = new Scanner(file).useDelimiter("\\Z").next();
+            JsonArray logs = new JsonParser().parse(content).getAsJsonArray();
+
+            JsonObject log = new JsonObject();
+            log.addProperty("message", message);
+            log.addProperty("date", date);
+            log.addProperty("type", type);
+            logs.add(log);
+
+            FileOutputStream os = new FileOutputStream(file, false);
+            os.write(logs.toString().getBytes());
+            os.close();
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    static String getLogs(LogRequestFormat request, ServletContext context) {
+        try {
+            File file = getLogFile(context);
+            String content = new Scanner(file).useDelimiter("\\Z").next();
             JsonArray jsonArray = (JsonArray) new JsonParser().parse(content);
             JsonArray result = new JsonArray();
 
@@ -42,17 +68,65 @@ class LogManager {
                     result.add(object);
                 }
             }
-            return result.getAsString();
-        } catch (FileNotFoundException e) {
+            return result.toString();
+        } catch (IOException e) {
             System.out.println(e.getMessage());
-            return null;
+            return "[]";
         }
     }
 
-    private static boolean matches(JsonObject object, LogRequest request) {
-        String type = object.get("type").toString();
-        String date = object.get("date").toString();
+    static boolean isOn(ServletContext context) {
+        try {
+            URL url = context.getResource("/WEB-INF/");
+            File file = new File(url.getPath() + "logStatus.json");
+            if (file.createNewFile()) {
+                FileOutputStream os = new FileOutputStream(file, false);
+                os.write("{\"status\":\"on\"}".getBytes());
+                os.close();
+            }
+            String content = new Scanner(file).useDelimiter("\\Z").next();
+            JsonObject logStatus = new JsonParser().parse(content).getAsJsonObject();
+            String status = logStatus.get("status").getAsString();
+            return status.equals("on");
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+    }
 
-        return request.type.contains(type);
+    private static boolean matches(JsonObject object, LogRequestFormat request) {
+        boolean typeCheck = request.types.contains(object.get("type").getAsString());
+        boolean fromCheck = false, toCheck = false;
+        Date date = null, from = null, to = null;
+        try {
+            date = dateFormat.parse(object.get("date").getAsString());
+            from = dateFormat.parse(request.from + " 00:00:00");
+        } catch (ParseException e) {
+            fromCheck = true;
+        }
+        try {
+            to = dateFormat.parse(request.to + " 23:59:59");
+        } catch (ParseException e) {
+            toCheck = true;
+        }
+        assert date != null;
+        if (!fromCheck) {
+            fromCheck = date.compareTo(from) >= 0;
+        }
+        if (!toCheck) {
+            toCheck = date.compareTo(to) <= 0;
+        }
+        return typeCheck && fromCheck && toCheck;
+    }
+
+    private static File getLogFile(ServletContext context) throws IOException {
+        URL url = context.getResource("/WEB-INF/");
+        File file = new File(url.getPath() + "logs.json");
+        if (file.createNewFile()) {
+            FileOutputStream os = new FileOutputStream(file, false);
+            os.write("[]".getBytes());
+            os.close();
+        }
+        return file;
     }
 }

@@ -2,8 +2,8 @@ package representations;
 
 import java.util.ArrayList;
 
-public class LogRequest {
+public class LogRequestFormat {
     public String to;
     public String from;
-    public ArrayList<String> type;
+    public ArrayList<String> types;
 }

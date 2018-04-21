@@ -93,7 +93,8 @@
             url: "services/logout",
             async: false
         });
-
+        console.log(data);
+        console.log(request.status);
         request.success(function (data, textStatus, xhr) {
             window.location = data;
         })

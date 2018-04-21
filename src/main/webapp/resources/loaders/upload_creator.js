@@ -53,7 +53,7 @@ function getUploadBtn($submissionsList, $uploadView, assignment_id) {
 	    // Should be implemented, when backend will be ready
 	     $.ajax({
 	         type: "POST",
-	         url: "services/upload",          // SHOULD Be Changed
+	         url: "services/upload",
 	         contentType: "application/json",
 	         data: JSON.stringify(data),
 	         success: function(result){
