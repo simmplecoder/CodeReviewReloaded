@@ -70,8 +70,8 @@
         		<%if (session.getAttribute("isInstructor").equals(1)) { %>
         
             <div id="addCourseDiv">
-            <button class="w3-border w3-button" id="addButton" onclick="addCourseBlock()"> &#8724; course </button>
-            <button class="w3-border w3-button" id="addButton" onclick="addAssignBlock()"> &#8724; assignment </button>
+            <button class="w3-border w3-button" id="addCourseButton" onclick="switchAddCourse()"> &#8724; course </button>
+            <button class="w3-border w3-button" id="addAssignmentButton" onclick="switchAddAssignment()"> &#8724; assignment </button>
             </div>
             
             <% } %>
@@ -105,49 +105,81 @@
         })
     }
 
-    var $addBlock;
-    var $input;
-
+    
     var courseWin = false;
 
-    function initCourseBlock() {
-        $addBlock = $("<div>").appendTo("#addCourseDiv");
+    function initBlock(placeholder, placeholder2) {
+        var $addBlock = $("<div>").appendTo("#addCourseDiv");
         $addBlock.addClass("addBlock w3-hide");
 
-        $input = $("<input>").attr("placeholder", "Course name").appendTo($addBlock);
+        var $input = $("<input>").attr("placeholder", placeholder).appendTo($addBlock);
         $input.addClass("inputCourse");
+        
+        var $input2;
+        if (placeholder2) {
+        		$input2 = $("<input>").attr("placeholder", placeholder2).appendTo($addBlock);
+            $input2.addClass("inputCourse");
+        }
 
         var $okButton = $("<button>").text("OK").appendTo($addBlock).click(function() {
             var course = {
                 "course" : $input.val()
             }
+            
             // make_request("addCourse", course) // TODO
 	
             $input.val("");
             toggle($addBlock);    
         });
+        
         $okButton.addClass("buttonCourse");
 
         var $cancelButton = $("<button>").text("Cancel").appendTo($addBlock).click(function() {
             $input.val("");
             toggle($addBlock);    
         });
-        $cancelButton.addClass("buttonCourse");            
+        
+        $cancelButton.addClass("buttonCourse");
+        
+        return $addBlock;
     }
+    
+    const COURSE = 0;
+    const ASSIGNMENT = 1;
+    const NOTDEFINED = 2;
+    
+    var addBlockType = NOTDEFINED;
 
-    initCourseBlock();
+    var $addCourseBlock = initBlock("Course name", null);
+    var $addAssignmentBlock = initBlock("Assignment name", "Assignment description");
 
-
-    function addCourseBlock() {
-        $input.attr("placeholder", "Course name")
-        toggle($addBlock);    
+    function switchAddCourse() {
+    		if (addBlockType == NOTDEFINED) {
+    			toggle($addCourseBlock);
+    			addBlockType = COURSE;
+    		} else if (addBlockType == COURSE) {
+    			toggle($addCourseBlock);
+    			addBlockType = NOTDEFINED;
+    		} else {
+    			toggle($addCourseBlock);
+    			toggle($addAssignmentBlock);
+    			addBlockType = COURSE;
+    		}
     }
-
-    function addAssignBlock() {
-        $input.attr("placeholder", "Assignment name")
-        toggle($addBlock);        
+    
+	function switchAddAssignment() {
+		if (addBlockType == NOTDEFINED) {
+			toggle($addAssignmentBlock);
+			addBlockType = ASSIGNMENT;
+		} else if (addBlockType == ASSIGNMENT) {
+			toggle($addAssignmentBlock);
+			addBlockType = NOTDEFINED;
+		} else {
+			toggle($addCourseBlock);
+			toggle($addAssignmentBlock);
+			addBlockType = ASSIGNMENT;
+		}
     }
-
 
 </script>
 
