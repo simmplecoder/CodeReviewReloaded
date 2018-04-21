@@ -67,7 +67,7 @@
   <div class="w3-row">
         <div class="w3-col m3 l3 w3-text-green" style="padding: 5px; height: 500px;">
         	
-        		<%if (session.getAttribute("isInstructor").equals(1)) { %>
+            <%if (session.getAttribute("isInstructor").equals(1)) { %>
         
             <div id="addCourseDiv">
             <button class="w3-border w3-button" id="addCourseButton" onclick="switchAddCourse()"> &#8724; course </button>

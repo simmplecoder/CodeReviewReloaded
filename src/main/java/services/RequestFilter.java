@@ -1,6 +1,8 @@
 package services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.jcraft.jsch.JSchException;
 import model.Assignment;
 import model.Course;
@@ -35,6 +37,31 @@ public class RequestFilter {
 
     RequestFilter() throws JSchException, SQLException, ClassNotFoundException {
         conn = Conn.getConnection();
+    }
+
+    private Response redirection(String service) {
+        URI uri = null;
+        HttpSession session = request.getSession();
+        if (session.getAttribute("username") == null) {
+            if (!service.matches("login|register")) {
+                try {
+                    uri = new URI("/index.jsp");
+                } catch (URISyntaxException e) {
+                    System.out.println(e.getMessage());
+                }
+                return Response.temporaryRedirect(uri).build();
+            }
+        } else {
+            if (service.matches("login|register")) {
+                try {
+                    uri = new URI("/home.jsp");
+                } catch (URISyntaxException e) {
+                    System.out.println(e.getMessage());
+                }
+                return Response.temporaryRedirect(uri).build();
+            }
+        }
+        return null;
     }
 
     @POST
@@ -233,28 +260,49 @@ public class RequestFilter {
         return Response.ok(new Gson().toJson(assignments), MediaType.APPLICATION_JSON_TYPE).build();
     }
 
-    private Response redirection(String service) {
-        URI uri = null;
-        HttpSession session = request.getSession();
-        if (session.getAttribute("username") == null) {
-            if (!service.matches("login|register")) {
-                try {
-                    uri = new URI("/index.jsp");
-                } catch (URISyntaxException e) {
-                    System.out.println(e.getMessage());
-                }
-                return Response.temporaryRedirect(uri).build();
-            }
-        } else {
-            if (service.matches("login|register")) {
-                try {
-                    uri = new URI("/home.jsp");
-                } catch (URISyntaxException e) {
-                    System.out.println(e.getMessage());
-                }
-                return Response.temporaryRedirect(uri).build();
-            }
+    @POST
+    @Path("createcourse")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createCourse(String json) {
+        Response redirection = redirection("createcourse");
+        if (redirection != null) {
+            return redirection;
         }
-        return null;
+        if (request.getSession().getAttribute("isInstructor") == null
+                || request.getSession().getAttribute("isInstructor").equals(0)) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+        }
+        JsonObject params = new JsonParser().parse(json).getAsJsonObject();
+        String title = params.get("coursename").getAsString();
+        String instructor = (String) request.getSession().getAttribute("username");
+        try {
+            Statement stmt = Conn.getConnection().createStatement();
+            String sqlQuery =
+                    "SELECT * FROM code_review.user " +
+                    "WHERE username='" + instructor + "';";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            int id = 0;
+            if (rs.next()) {
+                id = rs.getInt("id");
+                sqlQuery =
+                        "INSERT INTO code_review.course(title, instructor_id) " +
+                                "VALUES('" + title + "', " + id + ");";
+                stmt.executeUpdate(sqlQuery);
+
+                sqlQuery = "SELECT * FROM code_review.course ORDER BY id DESC;";
+                rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) {
+                    int course_id = rs.getInt("id");
+                    sqlQuery =
+                            "INSERT INTO code_review.user_has_course(student_id, course_id)" +
+                            "VALUES(" + id + ", " + course_id + ");";
+                    stmt.executeUpdate(sqlQuery);
+                }
+            }
+        } catch (SQLException | JSchException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return Response.ok().build();
     }
 }
