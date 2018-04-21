@@ -39,11 +39,11 @@ public class RequestFilter {
         conn = Conn.getConnection();
     }
 
-    private Response redirection(String service) {
+    private Response redirection(boolean needLogin) {
         URI uri = null;
         HttpSession session = request.getSession();
         if (session.getAttribute("username") == null) {
-            if (!service.matches("login|register")) {
+            if (needLogin) {
                 try {
                     uri = new URI("/index.jsp");
                 } catch (URISyntaxException e) {
@@ -52,7 +52,7 @@ public class RequestFilter {
                 return Response.temporaryRedirect(uri).build();
             }
         } else {
-            if (service.matches("login|register")) {
+            if (!needLogin) {
                 try {
                     uri = new URI("/home.jsp");
                 } catch (URISyntaxException e) {
@@ -69,7 +69,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response login(String json) throws SQLException {
-        Response redirection = redirection("login");
+        Response redirection = redirection(false);
         if (redirection != null) {
             return redirection;
         }
@@ -102,7 +102,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response logout(String json) {
-        Response redirection = redirection("logout");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
         }
@@ -119,7 +119,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public Response register(String json) throws SQLException, ClassNotFoundException, JSchException {
-        Response redirection = redirection("register");
+        Response redirection = redirection(false);
         if (redirection != null) {
             return redirection;
         }
@@ -162,9 +162,12 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLogs(String json) {
-        Response redirection = redirection("loggingsearch");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
+        }
+        if (!request.getSession().getAttribute("username").equals("admin")) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
         LogRequestFormat log = new Gson().fromJson(json, LogRequestFormat.class);
         return Response.ok(LogManager.getLogs(log, context), MediaType.APPLICATION_JSON_TYPE).build();
@@ -174,9 +177,12 @@ public class RequestFilter {
     @Path("loggingison")
     @Produces(MediaType.TEXT_PLAIN)
     public Response loggingIsOn() {
-        Response redirection = redirection("loggingison");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
+        }
+        if (!request.getSession().getAttribute("username").equals("admin")) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
         String status = LogManager.isOn(context) ? "YES" : "NO";
         return Response.ok(status, MediaType.TEXT_PLAIN_TYPE).build();
@@ -185,9 +191,12 @@ public class RequestFilter {
     @POST
     @Path("loggingswitch")
     public Response switchLogStatus() {
-        Response redirection = redirection("loggingswitch");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
+        }
+        if (!request.getSession().getAttribute("username").equals("admin")) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
         LogManager.setLogStatus(!LogManager.isOn(context), context);
         return Response.ok().build();
@@ -197,7 +206,7 @@ public class RequestFilter {
     @Path("courses")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCourses() {
-        Response redirection = redirection("courses");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
         }
@@ -233,7 +242,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssignments(String json) {
-        Response redirection = redirection("assignments");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
         }
@@ -265,7 +274,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCourse(String json) {
-        Response redirection = redirection("createcourse");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
         }
@@ -308,7 +317,7 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAssignment(String json) {
-        Response redirection = redirection("createassignment");
+        Response redirection = redirection(true);
         if (redirection != null) {
             return redirection;
         }
