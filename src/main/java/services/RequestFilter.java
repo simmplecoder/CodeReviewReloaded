@@ -298,16 +298,22 @@ public class RequestFilter {
                                 "VALUES('" + title + "', " + id + ");";
                 stmt.executeUpdate(sqlQuery);
 
-                sqlQuery = "SELECT LAST_INSERT_ID()";
-                rs = stmt.executeQuery(sqlQuery);
-                int course_id = Integer.parseInt(rs.getString(1));
-                sqlQuery =
-                        "INSERT INTO code_review.user_has_course(student_id, course_id)" +
-                                "VALUES(" + id + ", " + course_id + ");";
+                sqlQuery = "USE code_review;";
                 stmt.executeUpdate(sqlQuery);
+
+                sqlQuery = "SELECT LAST_INSERT_ID();";
+                rs = stmt.executeQuery(sqlQuery);
+                if (rs.next()) {
+                    int course_id = Integer.parseInt(rs.getString(1));
+                    sqlQuery =
+                            "INSERT INTO code_review.user_has_course(student_id, course_id)" +
+                                    "VALUES(" + id + ", " + course_id + ");";
+                    stmt.executeUpdate(sqlQuery);
+                }
             }
         } catch (SQLException | JSchException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
+            return Response.status(Response.Status.CONFLICT).build();
         }
         return Response.ok().build();
     }
