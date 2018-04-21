@@ -282,23 +282,57 @@ public class RequestFilter {
                     "SELECT * FROM code_review.user " +
                     "WHERE username='" + instructor + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
-            int id = 0;
             if (rs.next()) {
-                id = rs.getInt("id");
+                int id = rs.getInt("id");
                 sqlQuery =
                         "INSERT INTO code_review.course(title, instructor_id) " +
                                 "VALUES('" + title + "', " + id + ");";
                 stmt.executeUpdate(sqlQuery);
 
-                sqlQuery = "SELECT * FROM code_review.course ORDER BY id DESC;";
+                sqlQuery = "SELECT LAST_INSERT_ID()";
                 rs = stmt.executeQuery(sqlQuery);
-                if (rs.next()) {
-                    int course_id = rs.getInt("id");
-                    sqlQuery =
-                            "INSERT INTO code_review.user_has_course(student_id, course_id)" +
-                            "VALUES(" + id + ", " + course_id + ");";
-                    stmt.executeUpdate(sqlQuery);
-                }
+                int course_id = Integer.parseInt(rs.getString(1));
+                sqlQuery =
+                        "INSERT INTO code_review.user_has_course(student_id, course_id)" +
+                                "VALUES(" + id + ", " + course_id + ");";
+                stmt.executeUpdate(sqlQuery);
+            }
+        } catch (SQLException | JSchException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return Response.ok().build();
+    }
+
+    @POST
+    @Path("createassignment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createAssignment(String json) {
+        Response redirection = redirection("createassignment");
+        if (redirection != null) {
+            return redirection;
+        }
+        if (request.getSession().getAttribute("isInstructor") == null
+                || request.getSession().getAttribute("isInstructor").equals(0)) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+        }
+        JsonObject params = new JsonParser().parse(json).getAsJsonObject();
+        String description = params.get("description").getAsString();
+        String course_id = params.get("course_id").getAsString();
+        String title = params.get("title").getAsString();
+
+        try {
+            Statement stmt = Conn.getConnection().createStatement();
+            String sqlQuery =
+                    "SELECT * FROM code_review.user " +
+                            "WHERE username='" + request.getSession().getAttribute("username") + "';";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                sqlQuery =
+                        "INSERT INTO code_review.assignment(title, description, course_id, course_instructor_id) " +
+                        "VALUES('"+title+"', '"+description+"', "+course_id+", "+id+");";
+                stmt.executeUpdate(sqlQuery);
             }
         } catch (SQLException | JSchException | ClassNotFoundException e) {
             System.out.println(e.getMessage());
