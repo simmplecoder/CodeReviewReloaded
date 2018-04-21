@@ -1,4 +1,4 @@
-package datagatherer;
+package services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,28 +10,16 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 public class Conn {
-
-    static String sshUser = "root";
-    static String sshPass = "rocketman";
-    static String sshHost = "188.166.115.189";
-    static int sshPort = 22;
-
-    static String remoteHost = "127.0.0.1";
-    static int localPort = 3306;
-    static int remotePort = 3306;
-    static String remoteUser = "root";
-    static String remotePass = "rocketman";
-
-    String mongoHost = "127.0.0.1";
-    int mongoPort = 27017;
-    String mongoAdmin = "admin";
-    String mongoPass = "rocketman";
-
+    private static int localPort = 3306;
     private static Connection conn;
 
-    public static void sshTunnel() throws JSchException {
+    private static void sshTunnel() throws JSchException {
         JSch jsch = new JSch();
+        String sshHost = "188.166.115.189";
+        int sshPort = 22;
+        String sshUser = "root";
         Session session = jsch.getSession(sshUser, sshHost, sshPort);
+        String sshPass = "rocketman";
         session.setPassword(sshPass);
 
         Properties config = new Properties();
@@ -39,6 +27,8 @@ public class Conn {
         session.setConfig(config);
 
         session.connect();
+        String remoteHost = "127.0.0.1";
+        int remotePort = 3306;
         session.setPortForwardingL(localPort, remoteHost, remotePort);
     }
 
@@ -46,10 +36,11 @@ public class Conn {
         if (conn == null) {
             sshTunnel();
             Class.forName("com.mysql.jdbc.Driver");
+            String remoteUser = "root";
+            String remotePass = "rocketman";
             conn = DriverManager.getConnection("jdbc:mysql://localhost:" + localPort, remoteUser, remotePass);
             System.out.println("Connection established.");
         }
-
         return conn;
     }
 }

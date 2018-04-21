@@ -1,4 +1,4 @@
-package dreamteam;
+package services;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
