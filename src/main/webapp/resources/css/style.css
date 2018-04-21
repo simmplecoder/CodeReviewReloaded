@@ -33,27 +33,22 @@
     height: 12px;
 }
 
-#addButton {
-    width: 150px;
-    color: white;
-    background: #29c641;
-    margin-bottom: 10px;
+.addButton {
+    margin-bottom: 5px;
 }
 
 .addBlock {
-    border: 1px solid black;
-    background: #29c641;
+    border: 1px solid #29c641;
     margin-bottom: 10px;
+    margin-top: 5px;
 }
 
 .inputCourse {
-    margin: 5px;
+    /* margin: 5px; */
     display: block;
 }
 
 .buttonCourse {
-    margin: 5px;
-    background: white;
-
-    border: 1px solid black;
+    width: 100%;
+    padding: 5px;
 }

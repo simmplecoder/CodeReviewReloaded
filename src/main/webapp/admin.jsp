@@ -2,9 +2,9 @@
 <%
     if (session.getAttribute("username") == null) {
         response.sendRedirect("index.jsp");
-    }
+    } else
     if (!session.getAttribute("username").equals("admin")) {
-        response.sendRedirect("admin.jsp");
+        response.sendRedirect("home.jsp");
     }
 %>
 <!DOCTYPE html>

@@ -1,3 +1,9 @@
+var current_course_id;
+
+function getCurrenCourseID() {
+	return current_course_id;
+}
+
 function courses_loader() {
 	var params = { "username" : "ibro@nu.edu.kz" };
     var courses = make_request("courses", params);
@@ -14,6 +20,7 @@ function courses_loader() {
 		$li.click(function() {
 			$("#assignment_list").empty();
 			$("#assignment_list").append(assignments_loader(course["id"]));
+			current_course_id = course["id"];
 		});
 		
 		$ul.append($li);

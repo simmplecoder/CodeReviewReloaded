@@ -2,7 +2,7 @@
 <%
     if (session.getAttribute("username") == null) {
         response.sendRedirect("index.jsp");
-    }
+    } else
     if (session.getAttribute("username").equals("admin")) {
         response.sendRedirect("admin.jsp");
     }
@@ -67,20 +67,27 @@
   <div class="w3-row">
         <div class="w3-col m3 l3 w3-text-green" style="padding: 5px; height: 500px;">
         	
-            <%if (session.getAttribute("isInstructor").equals(1)) { %>
+            <%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
         
             <div id="addCourseDiv">
-            <button class="w3-border w3-button" id="addCourseButton" onclick="switchAddCourse()"> &#8724; course </button>
-            <button class="w3-border w3-button" id="addAssignmentButton" onclick="switchAddAssignment()"> &#8724; assignment </button>
+            <button class="w3-border w3-button w3-green addButton" id="addCourseButton" onclick="switchAddCourse()"> Add a new course </button>
             </div>
             
             <% } %>
 
             <div id = "course_list" class = "w3-border w3-round"></div>
         </div>
+        
         <div class="w3-col m9 l9" style="padding: 10px; height: 500px;">
-            <div id = "assignment_list" class = "w3-border w3-round">
-            </div>
+        		<%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
+
+	        <div id="addAssignmentDiv">
+    	    			<button class="w3-border w3-button  w3-green addbutton" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>
+   	    		</div>
+
+            <% } %>
+            
+            <div id = "assignment_list" class = "w3-border w3-round"> </div>
         </div>
     </div>
 </div>
@@ -91,6 +98,8 @@
 <script>
 
     $("#course_list").append(courses_loader());
+    
+    var idgetter = getCurrenCourseID;
     
     function logout() {
         var request = $.ajax({
@@ -104,43 +113,57 @@
             window.location = data;
         })
     }
-
     
     var courseWin = false;
 
-    function initBlock(placeholder, placeholder2) {
+    function initAddCourseBlock() {
         var $addBlock = $("<div>").appendTo("#addCourseDiv");
         $addBlock.addClass("addBlock w3-hide");
 
-        var $input = $("<input>").attr("placeholder", placeholder).appendTo($addBlock);
-        $input.addClass("inputCourse");
-        
-        var $input2;
-        if (placeholder2) {
-        		$input2 = $("<input>").attr("placeholder", placeholder2).appendTo($addBlock);
-            $input2.addClass("inputCourse");
-        }
+        var $input = $("<input>").attr("placeholder", "A new course name").appendTo($addBlock);
+        $input.addClass("inputCourse w3-input");
 
-        var $okButton = $("<button>").text("OK").appendTo($addBlock).click(function() {
-            var course = {
-                "course" : $input.val()
+        var $okButton = $("<button>").text("Submit").appendTo($addBlock).click(function() {
+            var params = { "coursename" : $input.val() };
+            if ($input.val() != "") {
+            		make_request("createcourse", params);
+            		$input.val("");
+                	toggle($addBlock);
+               	$("#course_list").empty();
+                	$("#course_list").append(courses_loader());
             }
-            
-            // make_request("addCourse", course) // TODO
-	
-            $input.val("");
-            toggle($addBlock);    
         });
         
-        $okButton.addClass("buttonCourse");
+        $okButton.addClass("buttonCourse w3-button w3-green");
+        return $addBlock;
+    }
+    
+    function initAddAssignmentBlock() {
+        var $addBlock = $("<div>").appendTo("#addAssignmentDiv");
+        $addBlock.addClass("addBlock w3-hide");
 
-        var $cancelButton = $("<button>").text("Cancel").appendTo($addBlock).click(function() {
-            $input.val("");
-            toggle($addBlock);    
+        var $input = $("<input>").attr("placeholder", "A new assignment title").appendTo($addBlock);
+        $input.addClass("inputCourse w3-input");
+        
+        var $input2 = $("<input>").attr("placeholder", "A description").appendTo($addBlock);
+        $input2.addClass("inputCourse w3-input");
+
+        var $okButton = $("<button>").text("Submit").appendTo($addBlock).click(function() {
+            var params = { 
+            		"course_id" : getCurrenCourseID(), 
+            		"title" : $input.val(),
+            		"description" : $input2.val()
+            	};
+            
+            if ($input.val() != "" && $input2.val() != "") {
+	            make_request("createassignment", params);
+	            $input.val("");
+	            $input2.val("");
+	            toggle($addBlock);    
+            }
         });
         
-        $cancelButton.addClass("buttonCourse");
-        
+        $okButton.addClass("buttonCourse w3-button w3-green");
         return $addBlock;
     }
     
@@ -150,8 +173,8 @@
     
     var addBlockType = NOTDEFINED;
 
-    var $addCourseBlock = initBlock("Course name", null);
-    var $addAssignmentBlock = initBlock("Assignment name", "Assignment description");
+    var $addCourseBlock = initAddCourseBlock();
+    var $addAssignmentBlock = initAddAssignmentBlock();
 
     function switchAddCourse() {
     		if (addBlockType == NOTDEFINED) {
