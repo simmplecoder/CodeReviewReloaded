@@ -1,8 +1,6 @@
-package dreamteam;
+package services;
 
 import com.jcraft.jsch.JSchException;
-import datagatherer.AssignmentsDao;
-import datagatherer.CoursesDao;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
@@ -20,8 +18,6 @@ public class App extends Application {
 
     public App(@Context ServletContext context) {
         try {
-            singletons.add(new CoursesDao());
-            singletons.add(new AssignmentsDao());
             singletons.add(new RequestFilter());
         } catch (JSchException | SQLException | ClassNotFoundException e) {
             e.printStackTrace();

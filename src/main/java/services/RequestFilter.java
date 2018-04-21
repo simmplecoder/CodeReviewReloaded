@@ -1,11 +1,10 @@
-package dreamteam;
+package services;
 
-import datagatherer.Conn;
 import com.google.gson.Gson;
 import com.jcraft.jsch.JSchException;
-import representations.LogRequestFormat;
-import representations.LoginAttempt;
-import representations.RegisterAttempt;
+import model.Assignment;
+import model.Course;
+import representations.*;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +21,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 @Path("")
@@ -46,7 +46,6 @@ public class RequestFilter {
         if (redirection != null) {
             return redirection;
         }
-
         Response.ResponseBuilder builder;
         HttpSession session = request.getSession();
         LoginAttempt loginAttempt = new Gson().fromJson(json, LoginAttempt.class);
@@ -97,7 +96,6 @@ public class RequestFilter {
         if (redirection != null) {
             return redirection;
         }
-
         HttpSession session = request.getSession();
         RegisterAttempt registerAttempt = new Gson().fromJson(json, RegisterAttempt.class);
         String username = registerAttempt.email;
@@ -137,6 +135,10 @@ public class RequestFilter {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public Response getLogs(String json) {
+        Response redirection = redirection("loggingsearch");
+        if (redirection != null) {
+            return redirection;
+        }
         LogRequestFormat log = new Gson().fromJson(json, LogRequestFormat.class);
         return Response.ok(LogManager.getLogs(log, context), MediaType.APPLICATION_JSON_TYPE).build();
     }
@@ -145,6 +147,10 @@ public class RequestFilter {
     @Path("loggingison")
     @Produces(MediaType.TEXT_PLAIN)
     public Response loggingIsOn() {
+        Response redirection = redirection("loggingison");
+        if (redirection != null) {
+            return redirection;
+        }
         String status = LogManager.isOn(context) ? "YES" : "NO";
         return Response.ok(status, MediaType.TEXT_PLAIN_TYPE).build();
     }
@@ -152,27 +158,80 @@ public class RequestFilter {
     @POST
     @Path("loggingswitch")
     public Response switchLogStatus() {
+        Response redirection = redirection("loggingswitch");
+        if (redirection != null) {
+            return redirection;
+        }
         LogManager.setLogStatus(!LogManager.isOn(context), context);
         return Response.ok().build();
     }
 
-//    @POST
-//    @Path("courses")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getCourses(String json) {
-//
-//        return null;
-//    }
-//
-//    @POST
-//    @Path("assignments")
-//    @Consumes(MediaType.APPLICATION_JSON)
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public Response getAssignments(String json) {
-//
-//        return null;
-//    }
+    @POST
+    @Path("courses")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getCourses() {
+        Response redirection = redirection("courses");
+        if (redirection != null) {
+            return redirection;
+        }
+        ArrayList<Course> courses = new ArrayList<>();
+        HttpSession session = request.getSession();
+        try {
+            Statement stmt = Conn.getConnection().createStatement();
+            String sqlQuery =
+                    "SELECT C.* " +
+                    "FROM code_review.user_has_course AS UC " +
+                    "INNER JOIN code_review.user AS U " +
+                    "ON UC.student_id = U.id " +
+                    "INNER JOIN code_review.course AS C " +
+                    "ON UC.course_id = C.id " +
+                    "WHERE U.username = \"" + session.getAttribute("username") + "\";";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+
+            while(rs.next()) {
+                String id = Integer.toString(rs.getInt("id"));
+                String title = rs.getString("title");
+                Course course = new Course(id, title);
+                courses.add(course);
+            }
+        } catch (SQLException | JSchException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return Response.ok(new Gson().toJson(courses), MediaType.APPLICATION_JSON_TYPE).build();
+    }
+
+    @POST
+    @Path("assignments")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAssignments(String json) {
+        Response redirection = redirection("assignments");
+        if (redirection != null) {
+            return redirection;
+        }
+        AssignmentsRequestFormat requestFormat = new Gson().fromJson(json, AssignmentsRequestFormat.class);
+        ArrayList<Assignment> assignments = new ArrayList<>();
+        try {
+            Statement stmt = Conn.getConnection().createStatement();
+            String sqlQuery =
+                    "select * " +
+                    "from code_review.assignment " +
+                    "where course_id="+requestFormat.id+";";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+
+            while(rs.next()) {
+                String id = Integer.toString(rs.getInt("id"));
+                String title = rs.getString("title");
+                String description = rs.getString("description");
+                Assignment assignment = new Assignment(id,title,description);
+                assignments.add(assignment);
+            }
+        } catch (JSchException | SQLException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return Response.ok(new Gson().toJson(assignments), MediaType.APPLICATION_JSON_TYPE).build();
+    }
 
     private Response redirection(String service) {
         URI uri = null;
