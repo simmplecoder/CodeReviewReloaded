@@ -302,4 +302,41 @@ public class RequestFilter {
         }
         return Response.ok().build();
     }
+
+    @POST
+    @Path("createassignment")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response createAssignment(String json) {
+        Response redirection = redirection("createassignment");
+        if (redirection != null) {
+            return redirection;
+        }
+        if (request.getSession().getAttribute("isInstructor") == null
+                || request.getSession().getAttribute("isInstructor").equals(0)) {
+            return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
+        }
+        JsonObject params = new JsonParser().parse(json).getAsJsonObject();
+        String description = params.get("description").getAsString();
+        String course_id = params.get("course_id").getAsString();
+        String title = params.get("title").getAsString();
+
+        try {
+            Statement stmt = Conn.getConnection().createStatement();
+            String sqlQuery =
+                    "SELECT * FROM code_review.user " +
+                            "WHERE username='" + request.getSession().getAttribute("username") + "';";
+            ResultSet rs = stmt.executeQuery(sqlQuery);
+            if (rs.next()) {
+                int id = rs.getInt("id");
+                sqlQuery =
+                        "INSERT INTO code_review.assignment(title, description, course_id, course_instructor_id) " +
+                        "VALUES('"+title+"', '"+description+"', "+course_id+", "+id+");";
+                stmt.executeUpdate(sqlQuery);
+            }
+        } catch (SQLException | JSchException | ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        return Response.ok().build();
+    }
 }
