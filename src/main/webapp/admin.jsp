@@ -41,13 +41,17 @@
 
 	<div class = "w3-container">
 		<div class = "w3-row">
+			<div class = "w3-col m1 l1 w3-right w3-cell-middle">
+				<p> <button id="switcher" class="w3-button w3-green" onclick="switchLogging();"> Switch </button> </p>
+			</div>
+			
 			<div class = "w3-col m3 l3 w3-left w3-cell-middle">
 				<p> From: <input type="text" id="datepickerFrom"></p>
 			</div>
 			<div class = "w3-col m4 l4 w3-center w3-cell-middle">
 				<p> To: <input type="text" id="datepickerTo"></p>
 			</div>
-			<div class = "w3-col m4 l4 w3-cell-middle">
+			<div class = "w3-col m3 l3 w3-cell-middle">
 				<p> <input class="w3-check" type="checkbox" id = "checkboxlogs" > Login logs.</p>
 				<p> <input class="w3-check" type="checkbox" id = "checkboxregisters" > Register logs.</p>
 				<p> <input class="w3-check" type="checkbox" id = "checkboxuploads" > Upload logs.</p>
@@ -67,6 +71,38 @@
 
 <script>
 
+	function dummyRequest(url) {
+		var request = $.ajax({
+	        type: "POST",
+	        url: "services/" + url,
+	        contentType: "application/json",
+	        async: false,
+	    });
+	
+		var result;
+	    request.success(function (response) {
+	        result = response;
+	    });
+	    return result;
+	}
+
+	function loggingStatus() {
+	   	var response = dummyRequest("loggingison");
+	   	console.log(response);
+        if (response === "YES") {
+        		$("#switcher").text("Turn OFF log");
+        } else {
+        		$("#switcher").text("Turn ON log");
+        }
+	}
+	
+	loggingStatus();
+	
+	function switchLogging() {
+		dummyRequest("loggingswitch");
+		loggingStatus();
+	}
+	
 	function logout() {
         var request = $.ajax({
             type: "POST",
@@ -110,6 +146,8 @@
 		console.log(JSON.stringify(params));
 		
 		var logs = make_request("loggingsearch", params);
+		
+		console.log(logs);
 		
 		// var logs = [{"types" : "Login", "message" : "Failing login service.", "date" : "12.04.2018"}, {"types" : "Register", "message" : "Failing register service.", "date" : "20.04.2018"}, {"types" : "Upload", "message" : "Upload login service.", "date" : "04.04.2018"}];
 		
