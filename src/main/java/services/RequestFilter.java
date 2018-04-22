@@ -224,6 +224,8 @@ public class RequestFilter {
                     "WHERE U.username = \"" + session.getAttribute("username") + "\";";
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
+            
+            
             while(rs.next()) {
                 String id = Integer.toString(rs.getInt("id"));
                 String title = rs.getString("title");

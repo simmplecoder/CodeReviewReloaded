@@ -82,7 +82,7 @@
         		<%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
 
 	        <div id="addAssignmentDiv">
-    	    			<button class="w3-border w3-button  w3-green addbutton" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>
+    	    			<button class="w3-border w3-button  w3-green addbutton w3-hide" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>
    	    		</div>
 
             <% } %>
@@ -125,12 +125,13 @@
 
         var $okButton = $("<button>").text("Submit").appendTo($addBlock).click(function() {
             var params = { "coursename" : $input.val() };
-            if ($input.val() != "") {
+            if ($input.val().length > 0) {
             		make_request("createcourse", params);
-            		$input.val("");
-                	toggle($addBlock);
                	$("#course_list").empty();
                 	$("#course_list").append(courses_loader());
+                	console.log($input.val());
+                	$input.val("");
+                	toggle($addBlock);
             }
         });
         
@@ -155,8 +156,10 @@
             		"description" : $input2.val()
             	};
             
-            if ($input.val() != "" && $input2.val() != "") {
+            if ($input.val().length > 0 && $input2.val().length > 0) {
 	            make_request("createassignment", params);
+	            $("#assignment_list").empty();
+				$("#assignment_list").append(assignments_loader(getCurrenCourseID()));
 	            $input.val("");
 	            $input2.val("");
 	            toggle($addBlock);    
