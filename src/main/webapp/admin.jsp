@@ -115,7 +115,7 @@
         })
     }
 
-	$( function() {
+	$(function() {
 		$( "#datepickerFrom" ).datepicker({
 			dateFormat: "yy-mm-dd"
 		});

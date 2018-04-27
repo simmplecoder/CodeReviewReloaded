@@ -46,14 +46,25 @@
     
 <header class="w3-container w3-green">
     <div class="w3-row">
-        <div class = "w3-col m11 l11">
+        <div class = "w3-col m10 l10">
             <h1>Code Review Tool</h1>
         </div>
-        <div class = "w3-col m1 l1">
-        <p>
-              <button class = "w3-button w3-white" onclick="logout();"> Exit
-              </button>
-              </p>
+        
+        <div class = "w3-col m2 l2">
+        		<div class="w3-dropdown-hover w3-right w3-cell-middle w3-center w3-green" style="height:100%;">
+    			 	<div> <% 	String name = "some text";
+        					if (session.getAttribute("username") != null) { 
+        						name = session.getAttribute("username").toString();
+        					}
+        				%> 		
+        				<h3> <%=name%> </h3>
+  				</div>
+  				
+	      		<div class="w3-dropdown-content w3-bar-block w3-card" style="right:0">
+       				<button class = "w3-button w3-text-green w3-hover-green w3-block "> Settings </button>
+       				<button class = "w3-button w3-text-green w3-hover-green w3-block" onclick="logout();"> Exit </button>
+	       		</div>
+        		</div>
         </div>
     </div>
 </header>

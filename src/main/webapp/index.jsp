@@ -15,6 +15,7 @@
     
     <!--  Custom JS functions and classes -->
     <script type="text/javascript" src="resources/authorization_validator.js"></script>
+    <script type="text/javascript" src="resources/loaders/make_request.js"></script>
 
     <!-- w3schools css -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
@@ -178,12 +179,9 @@
         }
     });
 
-    $("#submitButton").click(function()
-    {
+    $("#submitButton").click(function() {
         currentAuthorizationMethod();
     })
-    
-    
     
 	$("#login_div").keypress(function(e) {
 	    if(e.which == 13) {
