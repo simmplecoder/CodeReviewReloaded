@@ -12,16 +12,16 @@
 <head>
 	<title>Admin Page</title>
 
+	<!-- Remote JS libraries -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="http://code.jquery.com/jquery-latest.min.js"></script>
-	
-  	<link href="resources/css/jquery-ui.css" rel="stylesheet">
-  	
   	<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
+	<link rel="stylesheet" href="resources/css/jquery-ui.css">
 	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 	
+	<!-- Local JS libraries -->
 	<script type="text/javascript" src="resources/loaders/make_request.js"></script>
 
 </head>

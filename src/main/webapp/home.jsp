@@ -13,16 +13,11 @@
     <meta charset="UTF-8">
     <title>Welcome!</title>
     
+    <!-- Remote JS libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     
-    <!-- Loading ColoredCode -->
-    <script type="text/javascript" src="resources/colored_code.js"></script>
-    <script type="text/javascript" src="resources/prettify.js"></script>
-    <link href="resources/pretty_style.css" rel="stylesheet">
-    <link href="resources/css/style.css" rel="stylesheet">
-
-    <!-- Loading loaders JS -->
+    <!-- Local JS libraries -->
     <script type="text/javascript" src="resources/loaders/assignments_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/courses_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/submissions_loader.js"></script>
@@ -31,8 +26,13 @@
     <script type="text/javascript" src="resources/loaders/files_loader.js"></script>
     <script type="text/javascript" src="resources/loaders/make_request.js"></script>
     <script type="text/javascript" src="resources/loaders/toggler.js"></script>
-
     
+    <!-- Loading ColoredCode -->
+    <script type="text/javascript" src="resources/colored_code.js"></script>
+    <script type="text/javascript" src="resources/prettify.js"></script>
+
+    <link href="resources/pretty_style.css" rel="stylesheet">
+    <link href="resources/css/style.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="resources/css/home.css">
 
@@ -57,7 +57,7 @@
         						name = session.getAttribute("username").toString();
         					}
         				%> 		
-        				<h3> <%=name%> </h3>
+        				<h4> <%=name%> </h4>
   				</div>
   				
 	      		<div class="w3-dropdown-content w3-bar-block w3-card" style="right:0">
