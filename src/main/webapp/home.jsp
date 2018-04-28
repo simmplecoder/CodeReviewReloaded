@@ -81,7 +81,7 @@
             <%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
         
             <div id="addCourseDiv">
-            <button class="w3-border w3-button w3-green addButton" id="addCourseButton" onclick="switchAddCourse()"> Add a new course </button>
+            <button class="w3-border w3-button w3-green w3-margin-bottom" id="addCourseButton" onclick="switchAddCourse()"> Add a new course </button>
             </div>
             
             <% } %>
@@ -93,7 +93,7 @@
         		<%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
 
 	        <div id="addAssignmentDiv">
-    	    			<button class="w3-border w3-button  w3-green addbutton w3-hide" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>
+    	    			<button class="w3-border w3-button w3-green w3-margin-bottom w3-hide" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>
    	    		</div>
 
             <% } %>
@@ -129,10 +129,10 @@
 
     function initAddCourseBlock() {
         var $addBlock = $("<div>").appendTo("#addCourseDiv");
-        $addBlock.addClass("addBlock w3-hide");
+        $addBlock.addClass("w3-border w3-margin-bottom w3-hide");
 
         var $input = $("<input>").attr("placeholder", "A new course name").appendTo($addBlock);
-        $input.addClass("inputCourse w3-input");
+        $input.addClass("w3-block w3-input");
 
         var $okButton = $("<button>").text("Submit").appendTo($addBlock).click(function() {
             var params = { "coursename" : $input.val() };
@@ -146,19 +146,19 @@
             }
         });
         
-        $okButton.addClass("buttonCourse w3-button w3-green");
+        $okButton.addClass("w3-block w3-button w3-green");
         return $addBlock;
     }
     
     function initAddAssignmentBlock() {
         var $addBlock = $("<div>").appendTo("#addAssignmentDiv");
-        $addBlock.addClass("addBlock w3-hide");
+        $addBlock.addClass("w3-border w3-margin-bottom w3-hide");
 
         var $input = $("<input>").attr("placeholder", "A new assignment title").appendTo($addBlock);
-        $input.addClass("inputCourse w3-input");
+        $input.addClass("w3-input");
         
         var $input2 = $("<input>").attr("placeholder", "A description").appendTo($addBlock);
-        $input2.addClass("inputCourse w3-input");
+        $input2.addClass("w3-input");
 
         var $okButton = $("<button>").text("Submit").appendTo($addBlock).click(function() {
             var params = { 
@@ -177,7 +177,7 @@
             }
         });
         
-        $okButton.addClass("buttonCourse w3-button w3-green");
+        $okButton.addClass("w3-block w3-button w3-green");
         return $addBlock;
     }
     

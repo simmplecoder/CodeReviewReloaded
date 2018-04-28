@@ -3,52 +3,28 @@
     width: 80%;
     margin: auto;
     padding: 10px;
-    /* background-color: #f4fbf4; */
+    background-color: #f4fbf4;
 }
 
 .codeline {
-    margin : 0px 0px 0px -20px;
+	margin-bottom: 2px;
 }
 
 .codecomment {
     background: yellow;
-    padding: 5px;
-    margin: 10px;   
+    padding: 2px;
+    margin-top: 7px;
     box-shadow: inset 1px 1px 1px 1px #F6D946;
 }
 
 .editBlock {
-    border: 1px solid black;
-    background: #57bf67;
+	margin-top: 10px;
 }
 
 #oldMainCode {
-    /*height: 15px;*/
     font-size: 12px;
 }
-#oldMainCode ol  {
-    height: 12px;
-}
+
 #oldMainCode li  {
     height: 12px;
-}
-
-.addButton {
-    margin-bottom: 5px;
-}
-
-.addBlock {
-    border: 1px solid #29c641;
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-
-.inputCourse {
-    /* margin: 5px; */
-    display: block;
-}
-
-.buttonCourse {
-    width: 100%;
-    padding: 5px;
 }
