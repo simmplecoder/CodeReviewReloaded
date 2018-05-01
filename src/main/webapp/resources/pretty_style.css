@@ -1,8 +1,25 @@
 
 /*! Color themes for Google Code Prettify | MIT License | github.com/jmblog/color-themes-for-google-code-prettify */
+
+pre {
+	height: 15px;
+}
+
+li.codeline, ol.codecomment {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+  font-size: 14px;
+}
+
 .prettyprint {
-    font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas, monospace;
-    margin: 0px; padding: 0px; border: 0px solid #888; border-radius: 0px;
+    font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas;
+    margin: 0px;
+}
+
+.prettyprinted {
+    font-family: Menlo, "Bitstream Vera Sans Mono", "DejaVu Sans Mono", Monaco, Consolas;
+    margin: 0px;
 }
 
 .pln {
@@ -26,8 +43,7 @@ li.L6,
 li.L7,
 li.L8,
 li.L9 {
-    padding-left: 1em;
-    /* background-color: #f4fbf4;  */
+   	background-color: #f4fbf4;
     list-style-type: decimal;
 }
 

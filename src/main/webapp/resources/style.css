@@ -8,7 +8,9 @@
 
 .codeline {
     margin : 0px 0px 0px -20px;
-
+	border: 0px;
+	font-size: 12px;
+	height: 18px;
 }
 
 .codecomment {
@@ -17,18 +19,3 @@
     margin: 10px;   
     box-shadow: inset 1px 1px 1px 1px #F6D946;
 }
-
-.editBlock {
-    border: 1px solid black;
-    background: #57bf67;
-}
-
-#oldMainCode {
-    font-size: 12px;
-}
-#oldMainC/*ode ol  {
-    height: 12px;
-}
-#oldMainCode li  {
-    height: 12px;
-}*/

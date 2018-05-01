@@ -11,6 +11,7 @@ function createColoredCode(file_id) {
 
     var startLine, endLine;
     var arrayPre = [];
+    var arrayOfLineAndComments = [];
     var editWindowOpened = false;
     var $editBlockRef;
 
@@ -20,8 +21,14 @@ function createColoredCode(file_id) {
 
     REUSE = {
         createCodeLine: function(content, lineNumber) {
-            var $li = $(TAG_LI).addClass("codeline").append(content)
+            var $li = $(TAG_LI).addClass("codeline");
+            if (content == "")
+            		content = " ";
+            var $pre = $(TAG_PRE).addClass("prettyprint").text(content);
+            
+            $pre.appendTo($li);
             $li.data("lineNumber", lineNumber);
+            
             $li.mouseup(function() {
                 endLine = $(this).data("lineNumber");
                 if(startLine > endLine)
@@ -33,6 +40,8 @@ function createColoredCode(file_id) {
             $li.mousedown(function() {
                 startLine = $(this).data("lineNumber");
             });
+            
+            $li.removeClass("w3-list li");
             return $li;
         },
         createCommentLine: function(data, line) {
@@ -106,46 +115,29 @@ function createColoredCode(file_id) {
         })
         // PR.prettyPrint();
     };
+    
+    function loadLines2 (data, parent) {
+        arrayOfLineAndComments = [];
+        parent.empty();
+        var $ol = $(TAG_OL, {id:"oldMainCode"}).appendTo(parent);
+        var line = 1;
+        var current = 0;
 
-    function createEditBlock(startLine, endLine) {
-        if(editWindowOpened)
-            return;
-        var li = "<li>Hello</li>";
-        var childs = $("#test").children();
+        console.log($(parent));
 
-        var $editBlock = $("<div>").html("<p> Add a comment </p>");
-        $editBlock.addClass("editBlock");
-        var $input = $("<input>").appendTo($editBlock);
-
-        var $okButton = $("<button>").text("OK").appendTo($editBlock).click(function() {
-            var comment = { 
-                     
-                    "start" : startLine,
-                    "end" : endLine,
-                    "comment" : $input.val(),
-                    "author" : "user"
+        $.each( data, function( key, val ) {
+        		var $li = REUSE.createCodeLine(val, line);
+        		$li.appendTo($ol);
+        		arrayOfLineAndComments.push($li);
+            
+            while(current < comments.length && comments[current]["end"] == line) {
+                $ol.append($(TAG_LI).append(REUSE.createCommentLine(comments[current], line)));
+                current += 1;
             }
-
-            $editBlockRef.remove();
-            editWindowOpened = false;
-            comments.push(comment);
-            console.log(comments);
-
-            // make_request("addComment", comment); // TODO
-
-            loadLines(data["lines"], $maincode);
-            PR.prettyPrint();
-        });
-        
-        var $cancelButton = $("<button>").text("Cancel").appendTo($editBlock).click(function() {
-            $editBlockRef.remove();
-            editWindowOpened = false;
-        });
-
-        arrayPre[endLine-1].after($editBlock);
-        editWindowOpened = true;
-        $editBlockRef = $editBlock;
-    }
+            line += 1;
+        })
+        // PR.prettyPrint();
+    };
     
     function createAddCommentBlock(startLine, endLine) {
         if(editWindowOpened)
@@ -154,10 +146,10 @@ function createColoredCode(file_id) {
         		editWindowOpened = true;
         
         var $addCommentBlock = $("<div>").addClass("w3-container w3-card-4 w3-padding-small w3-section");
-        var $commentLabel = $("<h5>").addClass("w3-text-green").text("Your comment:").appendTo($addCommentBlock);
-        var $commentInput = $("<input>").addClass("w3-input w3-border").appendTo($addCommentBlock);
-        var $submitButton = $("<button>").addClass("w3-btn w3-green w3-margin-small").text("Submit").appendTo($addCommentBlock);
-        var $cancelButton = $("<button>").addClass("w3-btn w3-red w3-margin-small").text("Cancel").appendTo($addCommentBlock);
+        var $commentLabel = $("<h6>").addClass("w3-text-green").text("Your comment:").appendTo($addCommentBlock);
+        var $commentInput = $("<input>").addClass("w3-input w3-border w3-margin-bottom").appendTo($addCommentBlock);
+        var $submitButton = $("<button>").addClass("w3-btn w3-green w3-margin-right").text("Submit").appendTo($addCommentBlock);
+        var $cancelButton = $("<button>").addClass("w3-btn w3-red").text("Cancel").appendTo($addCommentBlock);
         
         $submitButton.click(function() {
         		var comment = {
@@ -168,7 +160,7 @@ function createColoredCode(file_id) {
                     "author" : "user"
             };
 
-        		$editBlockRef.remove();
+        	$editBlockRef.remove();
             editWindowOpened = false;
             comments.push(comment);
             console.log(comments);
@@ -176,7 +168,7 @@ function createColoredCode(file_id) {
             // make_request("addComment", comment); // TODO
 
             comments.sort(SortByEndline);
-            loadLines(data["lines"], $maincode);
+            loadLines2(data["lines"], $maincode);
             PR.prettyPrint();
         });
         
@@ -190,8 +182,46 @@ function createColoredCode(file_id) {
 		$editBlockRef = $addCommentBlock;
     }
 
-    loadLines(data["lines"], $maincode);
-    // PR.prettyPrint();
-
+    loadLines2(data["lines"], $maincode);
     return $maincode;
+    
+//  function createEditBlock(startLine, endLine) {
+//  if(editWindowOpened)
+//      return;
+//  var li = "<li>Hello</li>";
+//  var childs = $("#test").children();
+//
+//  var $editBlock = $("<div>").html("<p> Add a comment </p>");
+//  $editBlock.addClass("editBlock");
+//  var $input = $("<input>").appendTo($editBlock);
+//
+//  var $okButton = $("<button>").text("OK").appendTo($editBlock).click(function() {
+//      var comment = { 
+//               
+//              "start" : startLine,
+//              "end" : endLine,
+//              "comment" : $input.val(),
+//              "author" : "user"
+//      }
+//
+//      $editBlockRef.remove();
+//      editWindowOpened = false;
+//      comments.push(comment);
+//      console.log(comments);
+//
+//      // make_request("addComment", comment); // TODO
+//
+//      loadLines(data["lines"], $maincode);
+//      PR.prettyPrint();
+//  });
+//  
+//  var $cancelButton = $("<button>").text("Cancel").appendTo($editBlock).click(function() {
+//      $editBlockRef.remove();
+//      editWindowOpened = false;
+//  });
+//
+//  arrayPre[endLine-1].after($editBlock);
+//  editWindowOpened = true;
+//  $editBlockRef = $editBlock;
+//}
 }

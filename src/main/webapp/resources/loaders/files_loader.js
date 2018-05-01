@@ -12,13 +12,19 @@ function getFiles(submission_id) {
 
 		let $button = $("<li>").appendTo($li);
 		$button.text(file["name"]);
-		let $div = $("<div>").addClass("w3-hide").appendTo($li);
+		let $div = $("<div>").addClass("w3-hide scrollmenu").appendTo($li);
 
 		$button.click(function() {
 			$li.removeAttr('class');
 			$div.empty();
-			$div.append(createColoredCode(file['id']));
-			PR.prettyPrint();
+			$div.append(HighlightedCode(data));
+
+			hljs.configure({tabReplace: '    '});
+			$('pre').each(function(i, block) {
+				hljs.highlightBlock(block);
+			});
+
+			// PR.prettyPrint();
 
 			toggle($div, $button);
 		});

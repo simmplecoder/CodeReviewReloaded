@@ -6,25 +6,13 @@
     background-color: #f4fbf4;
 }
 
-.codeline {
-	margin-bottom: 2px;
-}
-
 .codecomment {
     background: yellow;
     padding: 2px;
-    margin-top: 7px;
+    margin: 5px;
     box-shadow: inset 1px 1px 1px 1px #F6D946;
 }
 
 .editBlock {
 	margin-top: 10px;
-}
-
-#oldMainCode {
-    font-size: 12px;
-}
-
-#oldMainCode li  {
-    height: 12px;
 }

@@ -14,7 +14,7 @@ function submissions_loader(assignment_id) {
 
 		let $button = $("<li>").appendTo($li);
 		$button.text(submission["title"]);
-		let $div = $("<div>").addClass("w3-hide").appendTo($li);
+		let $div = $("<div>").addClass("w3-hide submission").appendTo($li);
 		
 		$button.click(function() {
 			let $files = getFiles(submission["id"]);

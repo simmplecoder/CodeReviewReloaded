@@ -15,6 +15,7 @@
     
     <!-- Remote JS libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     
     <!-- Local JS libraries -->
@@ -28,13 +29,17 @@
     <script type="text/javascript" src="resources/loaders/toggler.js"></script>
     
     <!-- Loading ColoredCode -->
+    <script type="text/javascript" src="resources/highlighted_code.js"></script>
     <script type="text/javascript" src="resources/colored_code.js"></script>
-    <script type="text/javascript" src="resources/prettify.js"></script>
+    <script type="text/javascript" src="resources/codeline.js"></script>
 
+	<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link href="resources/pretty_style.css" rel="stylesheet">
     <link href="resources/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="resources/css/home.css">
+    
+    <link rel="stylesheet" href="resources/css/atom-one-light.min.css">
+    <link rel="stylesheet" href="resources/css/w3override.css">
 
     <!-- Loading jsons, later should be replaced with Ajax Requests  -->
     <script type="text/javascript" src="resources/json/data.json"></script>

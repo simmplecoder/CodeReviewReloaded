@@ -1,0 +1,45 @@
+@charset "UTF-8";
+
+pre {
+  margin: 0px;
+  height: 18px;
+}
+
+.code {
+  font-size: 15px;
+  margin: 0px;
+  padding: 0px;
+  height: 18px;
+}
+
+li.code {
+  padding: 0px;
+  border: 0px; 
+}
+
+.specialone {
+	background-color: #F6E3CE;
+	-moz-user-select: none;
+   -khtml-user-select: none;
+   -webkit-user-select: none;
+
+   /*
+     Introduced in IE 10.
+     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
+   */
+   -ms-user-select: none;
+   user-select: none;
+}
+
+div.scrollmenu {
+    overflow: auto;
+    white-space: nowrap;
+}
+
+.codecomment {
+	font-size: 12px;
+    background: yellow;
+    padding: 2px 5px 2px 5px ;
+    margin-top: 5px;
+    box-shadow: inset 1px 1px 1px 1px #F6D946;
+}
