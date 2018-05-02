@@ -17,7 +17,7 @@ function getFiles(submission_id) {
 		$button.click(function() {
 			$li.removeAttr('class');
 			$div.empty();
-			$div.append(HighlightedCode(data));
+			$div.append(HighlightedCode(data, file["id"]));
 
 			hljs.configure({tabReplace: '    '});
 			$('pre').each(function(i, block) {

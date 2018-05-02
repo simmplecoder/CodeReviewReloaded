@@ -1,4 +1,4 @@
-function HighlightedCode(dataa) {
+function HighlightedCode(dataa, file_id) {
 	var lines = dataa["lines"];
 	var arrayOfLines = [];
 	
@@ -8,7 +8,6 @@ function HighlightedCode(dataa) {
     }
 
 	var comments = dataa["comments"];
-	
 	var startline;
 	var endline;
 	
@@ -32,16 +31,44 @@ function HighlightedCode(dataa) {
 		return $li;
 	}
 
-	function createComment(comment) {
+	function createComment(comment, startline, endline) {
 		var $div = $("<div>").addClass("codecomment");
         var $span = $("<b>").appendTo($div).css({"color" : "purple"});
         $span.text(comment["author"]);
         $div.append(" - " + comment["comment"]);
+        $div.addClass("noselection");
+        
+        $div.append(" - " + data['comment']);
+        $div.data("multiply", 5);
+        $div.data("full_comment", data['comment']);
+        $div.data("startline", comment["start"]);
+        $div.data("endline", comment["end"]);
+        
+        console.log(comment["startline"]);
+        console.log(comment["endline"]);
+        
+        $div.on("click", function() {
+            var multiply = $(this).data("multiply");
+            $(this).height($(this).height() * multiply);
+            $(this).data("multiply", 1 / multiply);
+            
+            console.log( $(this).data("startline"));
+            console.log( $(this).data("endline"));
+            
+            for (var line = $(this).data("startline"); line <= $(this).data("endline"); line++) {
+        		if (multiply === 5)
+        			arrayOfLines[line].addClass("specialone");
+        		else
+            		arrayOfLines[line].removeClass("specialone");
+		    }
+        });
+        
 		return $div;
 	}
 
 	var editWindowOpened = false;
 	var $editBlockRef;
+	
 	function createAddCommentBlock() {
         if(editWindowOpened)
             return;
@@ -50,7 +77,6 @@ function HighlightedCode(dataa) {
         
         if(startline > endline)
             endline = [startline, startline = endline][0];
-        
         
         for (var line = startline; line <= endline; line++) {
 	    		arrayOfLines[line].addClass("specialone");
@@ -66,17 +92,28 @@ function HighlightedCode(dataa) {
         		var comment = {
                     "file_id" : file_id, 
                     "start" : startline,
-                    "end" : endLine,
+                    "end" : endline,
                     "comment" : $commentInput.val(),
                     "author" : "user"
             };
 
-        	$editBlockRef.remove();
+        		$editBlockRef.remove();
             editWindowOpened = false;
             comments.push(comment);
             console.log(comments);
+            
+            // SAVING COMMENT TO BACKEND.
             // make_request("addComment", comment); // TODO
+            
+            for (var line = startline; line <= endline; line++) {
+	        		arrayOfLines[line].removeClass("specialone");
+	        }
+            
             fillWithLineAndComments();
+            $('pre').each(function(i, block) {
+				hljs.highlightBlock(block);
+			});
+            document.getSelection().removeAllRanges();
         });
         
         $cancelButton.click(function() {
@@ -86,6 +123,7 @@ function HighlightedCode(dataa) {
             for (var line = startline; line <= endline; line++) {
             		arrayOfLines[line].removeClass("specialone");
             }
+            document.getSelection().removeAllRanges();
         });
 
         arrayOfLines[endline].after($addCommentBlock);

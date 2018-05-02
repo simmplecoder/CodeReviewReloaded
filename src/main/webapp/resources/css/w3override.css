@@ -20,15 +20,18 @@ li.code {
 .specialone {
 	background-color: #F6E3CE;
 	-moz-user-select: none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
+   	-khtml-user-select: none;
+   	-webkit-user-select: none;
+   	-ms-user-select: none;
+   	user-select: none;
+}
 
-   /*
-     Introduced in IE 10.
-     See http://ie.microsoft.com/testdrive/HTML5/msUserSelect/
-   */
-   -ms-user-select: none;
-   user-select: none;
+.noselection {
+	-moz-user-select: none;
+   	-khtml-user-select: none;
+   	-webkit-user-select: none;
+   	-ms-user-select: none;
+   	user-select: none;
 }
 
 div.scrollmenu {
