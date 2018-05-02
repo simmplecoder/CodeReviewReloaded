@@ -1,6 +1,7 @@
 function HighlightedCode(dataa, file_id) {
 	var lines = dataa["lines"];
 	var arrayOfLines = [];
+	var arrayOfComments = [];
 	
 	function SortByEndline(a, b){
         var aIndex = a['end'], bIndex = b['end'];
@@ -48,18 +49,34 @@ function HighlightedCode(dataa, file_id) {
         console.log(comment["endline"]);
         
         $div.on("click", function() {
+        		// Resetting all comments and lines before highlighting.
+            // specific one.
+            for (var i = 0; i < arrayOfComments.length; i++) {
+            		var multiply = arrayOfComments[i].data("multiply");
+            		if ($(this).is(arrayOfComments[i]) === false && multiply === 1 / 5) {
+            			console.log(arrayOfComments[i].data("multiply"));
+            			arrayOfComments[i].height(arrayOfComments[i].height() * multiply);
+            			arrayOfComments[i].data("multiply", 1 / multiply);
+            		}
+            }
+            
             var multiply = $(this).data("multiply");
             $(this).height($(this).height() * multiply);
             $(this).data("multiply", 1 / multiply);
             
             console.log( $(this).data("startline"));
             console.log( $(this).data("endline"));
+            console.log( $(this).data("multiply"));
+            
+            for (var i = 0; i < arrayOfLines.length; i++) {
+            		arrayOfLines[i].removeClass("specialone");
+            }
             
             for (var line = $(this).data("startline"); line <= $(this).data("endline"); line++) {
-        		if (multiply === 5)
-        			arrayOfLines[line].addClass("specialone");
-        		else
-            		arrayOfLines[line].removeClass("specialone");
+	        		if (multiply === 5)
+	        			arrayOfLines[line].addClass("specialone");
+	        		else
+	            		arrayOfLines[line].removeClass("specialone");
 		    }
         });
         
@@ -143,8 +160,10 @@ function HighlightedCode(dataa, file_id) {
 	    		arrayOfLines.push($lineRef);
 	    	 	$ol.append($lineRef);
 	 		while(current < comments.length && comments[current]["end"] == line) {
-			     $ol.append(createComment(comments[current]));
-			     current += 1;
+	 			var $commentRef = createComment(comments[current]); 
+	 			arrayOfComments.push($commentRef);
+			    $ol.append($commentRef);
+			    current += 1;
 	 		}
 	    }
 	}
