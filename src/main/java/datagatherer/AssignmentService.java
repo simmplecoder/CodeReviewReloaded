@@ -17,12 +17,12 @@ import model.Assignment;
 import representations.AssignmentsRequestFormat;
 
 @Path("/assignments")
-public class AssignmentsDao {
+public class AssignmentService {
 	
 	public ArrayList<Assignment> fetchAssignments(String course_id) {
 		ArrayList<Assignment> assignments = new ArrayList<Assignment>();
 		try {
-			Statement stmt = Conn.getConnection().createStatement();
+			Statement stmt = ConnectionService.getConnection().createStatement();
 			String sqlQuery = "select * from code_review.assignment where course_id="+course_id+";";
 			ResultSet rs = stmt.executeQuery(sqlQuery);
 			

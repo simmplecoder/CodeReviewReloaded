@@ -9,7 +9,7 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
-public class Conn {
+public class ConnectionService {
 
     static String sshUser = "root";
     static String sshPass = "rocketman";
