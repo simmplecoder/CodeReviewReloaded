@@ -3,7 +3,6 @@ package services;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.jcraft.jsch.JSchException;
 import model.Assignment;
 import model.Course;
 import representations.*;

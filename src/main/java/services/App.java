@@ -1,7 +1,5 @@
 package services;
 
-import com.jcraft.jsch.JSchException;
-
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -17,11 +15,7 @@ public class App extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public App(@Context ServletContext context) {
-        try {
-            singletons.add(new RequestFilter());
-        } catch (JSchException | SQLException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        singletons.add(new RequestFilter());
     }
 
     public Set<Object> getSingletons()
