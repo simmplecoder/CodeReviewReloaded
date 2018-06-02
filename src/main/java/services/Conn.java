@@ -13,34 +13,23 @@ public class Conn {
     private static int localPort = 3306;
     private static Connection conn;
 
-    private static void sshTunnel() throws JSchException {
-        JSch jsch = new JSch();
-        String sshHost = "188.166.115.189";
-        int sshPort = 22;
-        String sshUser = "root";
-        Session session = jsch.getSession(sshUser, sshHost, sshPort);
-        String sshPass = "rocketman";
-        session.setPassword(sshPass);
+    private static Conn instance;
 
-        Properties config = new Properties();
-        config.put("StrictHostKeyChecking", "no");
-        session.setConfig(config);
-
-        session.connect();
-        String remoteHost = "127.0.0.1";
-        int remotePort = 3306;
-        session.setPortForwardingL(localPort, remoteHost, remotePort);
+    private Conn() {
+        try {
+            conn = DriverManager.getConnection(
+                    "jdbc:mysql://localhost:3306/CodeReviewTool",
+                    "root",
+                    "crt2018");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static Connection getConnection() throws JSchException, ClassNotFoundException, SQLException {
-        if (conn == null) {
-            sshTunnel();
-            Class.forName("com.mysql.jdbc.Driver");
-            String remoteUser = "root";
-            String remotePass = "rocketman";
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:" + localPort, remoteUser, remotePass);
-            System.out.println("Connection established.");
+    public static Connection connect() {
+        if (instance == null) {
+            instance = new Conn();
         }
-        return conn;
+        return instance.conn;
     }
 }
