@@ -13,11 +13,12 @@ public class Conn {
 
     private Conn() {
         try {
+            Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/CodeReviewTool",
+                    "jdbc:mysql://localhost:" + localPort + "/CodeReviewTool",
                     "root",
-                    "crt2018");
-        } catch (SQLException e) {
+                    "crt2018A");
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -33,6 +33,10 @@ public class RequestFilter {
     private ServletContext context;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
+    public RequestFilter() {
+        Conn.connect();
+    }
+
     private Response redirection(boolean needLogin) {
         URI uri = null;
         HttpSession session = request.getSession();
@@ -74,9 +78,12 @@ public class RequestFilter {
         String password = loginAttempt.password;
 
         Statement stmt = Conn.connect().createStatement();
-        String sql = "select * from code_review.user where email=\'" + email +
+        String sql = "select * from user where email=\'" + email +
                 "\' and password=\'" + password + "\';";
         ResultSet rs = stmt.executeQuery(sql);
+
+        System.out.println("email: " + email + ", password: " + password);
+
         if(rs.next()) {
             LogManager.addLog(email + " successfully logged in.",
                     dateFormat.format(new Date()), "login", context);
@@ -88,6 +95,7 @@ public class RequestFilter {
                     dateFormat.format(new Date()), "login", context);
             builder = Response.status(Response.Status.UNAUTHORIZED);
         }
+
         return builder.build();
     }
 //
