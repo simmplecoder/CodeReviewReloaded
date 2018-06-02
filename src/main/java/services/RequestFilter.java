@@ -70,21 +70,21 @@ public class RequestFilter {
         Response.ResponseBuilder builder;
         HttpSession session = request.getSession();
         LoginAttempt loginAttempt = new Gson().fromJson(json, LoginAttempt.class);
-        String username = loginAttempt.username;
+        String email = loginAttempt.username;
         String password = loginAttempt.password;
 
         Statement stmt = Conn.connect().createStatement();
-        String sql = "select * from code_review.user where username=\'" + username +
+        String sql = "select * from code_review.user where email=\'" + email +
                 "\' and password=\'" + password + "\';";
         ResultSet rs = stmt.executeQuery(sql);
         if(rs.next()) {
-            LogManager.addLog(username + " successfully logged in.",
+            LogManager.addLog(email + " successfully logged in.",
                     dateFormat.format(new Date()), "login", context);
             session.setAttribute("isInstructor", rs.getInt("isInstructor"));
-            session.setAttribute("username", username);
+            session.setAttribute("username", email);
             builder = Response.ok("home.jsp", MediaType.TEXT_PLAIN);
         } else {
-            LogManager.addLog(username + " tried to log in. HTTP 401 was returned.",
+            LogManager.addLog(email + " tried to log in. HTTP 401 was returned.",
                     dateFormat.format(new Date()), "login", context);
             builder = Response.status(Response.Status.UNAUTHORIZED);
         }
