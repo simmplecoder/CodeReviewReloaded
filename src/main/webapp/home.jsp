@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    if (session.getAttribute("username") == null) {
+    if (session.getAttribute("email") == null) {
         response.sendRedirect("index.jsp");
     } else
-    if (session.getAttribute("username").equals("admin")) {
+    if (session.getAttribute("email").equals("admin")) {
         response.sendRedirect("admin.jsp");
     }
 %>
@@ -58,8 +58,8 @@
         <div class = "w3-col m2 l2">
         		<div class="w3-dropdown-hover w3-right w3-cell-middle w3-center w3-green" style="height:100%;">
     			 	<div> <% 	String name = "some text";
-        					if (session.getAttribute("username") != null) { 
-        						name = session.getAttribute("username").toString();
+        					if (session.getAttribute("email") != null) {
+        						name = session.getAttribute("email").toString();
         					}
         				%> 		
         				<h4> <%=name%> </h4>
@@ -83,7 +83,7 @@
   <div class="w3-row">
         <div class="w3-col m3 l3 w3-text-green" style="padding: 5px; height: 500px;">
         	
-            <%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
+            <%if (session.getAttribute("email") != null && session.getAttribute("isInstructor").equals(1)) { %>
         
             <div id="addCourseDiv">
             <button class="w3-border w3-button w3-green w3-margin-bottom" id="addCourseButton" onclick="switchAddCourse()"> Add a new course </button>
@@ -95,7 +95,7 @@
         </div>
         
         <div class="w3-col m9 l9" style="padding: 10px; height: 500px;">
-        		<%if (session.getAttribute("username") != null && session.getAttribute("isInstructor").equals(1)) { %>
+        		<%if (session.getAttribute("email") != null && session.getAttribute("isInstructor").equals(1)) { %>
 
 	        <div id="addAssignmentDiv">
     	    			<button class="w3-border w3-button w3-green w3-margin-bottom w3-hide" id="addAssignmentButton" onclick="switchAddAssignment()"> Add a new assignment </button>

@@ -1,26 +1,67 @@
 package model;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 
+@Entity
+@Table(name="assignment")
 public class Assignment {
-	
-	String id;
+
+	@Id
+    @Column(name = "id")
+	int id;
+
+    @Column(name = "title")
 	String title;
-	String description;
-	Instructor instructor;
-	ArrayList<Student> students;
-	
-	public Assignment(String id, String title, String description) {
+
+    @Column(name = "desc")
+	String desc;
+
+    @Column(name = "course_id")
+    int course_id;
+
+    public Assignment(String title, String desc, int course_id) {
+        this.title = title;
+        this.desc = desc;
+        this.course_id = course_id;
+    }
+
+	public Assignment(int id, String title, String desc, int course_id) {
 		this.id = id;
 		this.title = title;
-		this.description = description;
+		this.desc = desc;
+		this.course_id = course_id;
 	}
-	
-	public Assignment(String id, String title, String description, Instructor instructor, ArrayList<Student> students) {
-		this.id = id;
-		this.title = title;
-		this.description = description;
-		this.instructor = instructor;
-		this.students = students;
-	}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
+
+    public int getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(int course_id) {
+        this.course_id = course_id;
+    }
 }

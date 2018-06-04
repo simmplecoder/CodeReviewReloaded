@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%
-	if (session.getAttribute("username") != null) {
+	if (session.getAttribute("email") != null) {
 		response.sendRedirect("home.jsp");
 	}
 %>
@@ -139,8 +139,8 @@
 
     function performRegistration() {
         var params = {};
-        params.firstname = $("#firstname").val();
-        params.lastname = $("#lastname").val();
+        params.first_name = $("#firstname").val();
+        params.last_name = $("#lastname").val();
         params.password = $("#registerPassword").val();
         params.password2 = $("#registerPasswordConfirm").val();
         params.email = $("#registerEmail").val();

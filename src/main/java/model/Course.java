@@ -1,22 +1,27 @@
 package model;
 
-import java.util.ArrayList;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
+
+@Entity
+@Table(name="course")
 public class Course {
-	String id;
+	@Id
+	@Column(name="id")
+	int id;
+
+	@Column(name="title")
 	String title;
-	Instructor courseInstructor;
-	ArrayList<Student> registeredStudents;
-	
-	public Course(String id, String title) {
+
+	public Course(String title) {
+        this.title = title;
+    }
+
+	public Course(int id, String title) {
 		this.id = id;
 		this.title = title;
-	}
-	
-	public Course(String id, String title, Instructor courseInstructor, ArrayList<Student> registeredStudents) {
-		this.id = id;
-		this.title = title;
-		this.courseInstructor = courseInstructor;
-		this.registeredStudents = registeredStudents;
 	}
 }

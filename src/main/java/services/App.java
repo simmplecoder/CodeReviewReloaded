@@ -15,7 +15,11 @@ public class App extends Application {
     private Set<Class<?>> classes = new HashSet<>();
 
     public App(@Context ServletContext context) {
-        singletons.add(new RequestFilter());
+        singletons.add(new LoginHandler());
+        singletons.add(new RegistrationHandler());
+        singletons.add(new CoursesHandler());
+        singletons.add(new AssignmentsHandler());
+        singletons.add(new CreateCourseHandler());
     }
 
     public Set<Object> getSingletons()

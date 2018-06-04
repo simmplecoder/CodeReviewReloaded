@@ -2,16 +2,14 @@ package services;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.util.Properties;
 
-public class Conn {
+public class MySQLConnection {
     private static int localPort = 3306;
     private static Connection conn;
 
-    private static Conn instance;
+    private static MySQLConnection instance;
 
-    private Conn() {
+    private MySQLConnection() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(
@@ -25,7 +23,7 @@ public class Conn {
 
     public static Connection connect() {
         if (instance == null) {
-            instance = new Conn();
+            instance = new MySQLConnection();
         }
         return instance.conn;
     }

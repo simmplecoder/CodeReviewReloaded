@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
 <%
-    if (session.getAttribute("username") == null) {
+    if (session.getAttribute("email") == null) {
         response.sendRedirect("index.jsp");
     } else
-    if (!session.getAttribute("username").equals("admin")) {
+    if (!session.getAttribute("email").equals("admin")) {
         response.sendRedirect("home.jsp");
     }
 %>
