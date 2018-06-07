@@ -24,6 +24,7 @@ public class App extends Application {
         singletons.add(new SubmissionsHandler());
         singletons.add(new FilesHandler());
         singletons.add(new UploadHandler());
+        singletons.add(new CourseRegistrationHandler());
     }
 
     public Set<Object> getSingletons()

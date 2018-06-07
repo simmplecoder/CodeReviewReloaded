@@ -125,8 +125,6 @@
         request.success(function (data, textStatus, xhr) {
             window.location = data;
         })
-        
-        
     }
 
     function performLogin(){

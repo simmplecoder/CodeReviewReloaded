@@ -54,6 +54,9 @@ public class RegistrationHandler {
 
             session.setAttribute("email", user.getEmail());
             session.setAttribute("isInstructor", 0);
+            session.setAttribute("user_id", user.getId());
+            session.setAttribute("first_name", user.getFirst_name());
+            session.setAttribute("last_name", user.getLast_name());
 
             return Response.ok("home.jsp", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {

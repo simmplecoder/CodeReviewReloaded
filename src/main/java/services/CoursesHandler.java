@@ -2,10 +2,12 @@ package services;
 
 import com.google.gson.Gson;
 import model.Course;
+import representations.CoursesRequestFormat;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -25,8 +27,9 @@ public class CoursesHandler {
 
     @POST
     @Path("courses")
+    @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getCourses() {
+    public Response getCourses(String json) {
         Response redirection = new RedirectionHandler(request).redirection(true);
         if (redirection != null) {
             return redirection;
@@ -34,27 +37,54 @@ public class CoursesHandler {
         ArrayList<Course> courses = new ArrayList<>();
         HttpSession session = request.getSession();
 
-        try {
-            Statement stmt = MySQLConnection.connect().createStatement();
-            String sqlQuery =
-                    "SELECT C.* " +
-                            "FROM teaching_course AS UC " +
-                            "INNER JOIN user AS U " +
-                            "ON UC.user_id = U.id " +
-                            "INNER JOIN course AS C " +
-                            "ON UC.course_id = C.id " +
-                            "WHERE U.email = \"" + session.getAttribute("email") + "\";";
-            ResultSet rs = stmt.executeQuery(sqlQuery);
+        CoursesRequestFormat requested = new Gson().fromJson(json, CoursesRequestFormat.class);
 
+        System.out.println(requested);
 
-            while(rs.next()) {
-                int id = rs.getInt("id");
-                String title = rs.getString("title");
-                Course course = new Course(id, title);
-                courses.add(course);
+        if (!(session.getAttribute("isInstructor") == null) && session.getAttribute("isInstructor").equals(1)) {
+            try {
+                Statement stmt = MySQLConnection.connect().createStatement();
+                String sqlQuery =
+                        "SELECT C.* " +
+                                "FROM teaching_course AS UC " +
+                                "INNER JOIN user AS U " +
+                                "ON UC.user_id = U.id " +
+                                "INNER JOIN course AS C " +
+                                "ON UC.course_id = C.id " +
+                                "WHERE U.email = \"" + session.getAttribute("email") + "\";";
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String title = rs.getString("title");
+                    Course course = new Course(id, title);
+                    courses.add(course);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
+        } else {
+            String sqlQuery = "";
+            String email = session.getAttribute("email").toString();
+            if (requested.registered == true) {
+                sqlQuery = "select * from enrolled_course as ec, course as c  where ec.course_id = c.id and ec.user_id = " + session.getAttribute("user_id") + ";";
+            } else {
+                sqlQuery = "select * from course where id not in (select ec.course_id from enrolled_course as ec, user as u where u.email = \"" +
+                    email + "\" and u.id = ec.user_id);";
+            }
+
+            try {
+                Statement stmt = MySQLConnection.connect().createStatement();
+                ResultSet rs = stmt.executeQuery(sqlQuery);
+                while (rs.next()) {
+                    int id = rs.getInt("id");
+                    String title = rs.getString("title");
+                    Course course = new Course(id, title);
+                    courses.add(course);
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         return Response.ok(new Gson().toJson(courses), MediaType.APPLICATION_JSON_TYPE).build();

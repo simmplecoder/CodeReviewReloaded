@@ -4,14 +4,13 @@ function getCurrenCourseID() {
 	return current_course_id;
 }
 
-function courses_loader() {
-	var params = { "username" : "ibro@nu.edu.kz" };
+function courses_loader(params) {
     var courses = make_request("courses", params);
 
 	// var courses = [{"title" : "CSCI 151", "id" : "id0"}, {"title" : "CSCI 152", "id" : "id1"}];
-	
+
     console.log(courses);
-    
+
 	var $ul = $("<ul>").addClass("w3-ul w3-hoverable");
 	
 	for (let i = 0; i < courses.length; i++) {

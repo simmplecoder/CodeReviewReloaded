@@ -64,6 +64,11 @@ public class LoginHandler {
         if (list.size() > 0) {
             session.setAttribute("isInstructor", list.get(0).getIsInstructor());
             session.setAttribute("email", email);
+            System.out.println("Session user id " + list.get(0).getId());
+            session.setAttribute("user_id", list.get(0).getId());
+            session.setAttribute("first_name", list.get(0).getFirst_name());
+            session.setAttribute("last_name", list.get(0).getLast_name());
+
             builder = Response.ok("home.jsp", MediaType.TEXT_PLAIN);
         } else {
             builder = Response.status(Response.Status.UNAUTHORIZED);

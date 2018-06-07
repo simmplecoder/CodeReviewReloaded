@@ -24,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,8 +67,12 @@ public class UploadHandler {
 
         HttpSession session = request.getSession();
         new_submission.setEmail(session.getAttribute("email").toString());
+        String first_name = session.getAttribute("first_name").toString();
+        String last_name = session.getAttribute("last_name").toString();
+
         Date date = new Date();
-        new_submission.setTitle("by " + new_submission.getEmail() + " on " + date.toString());
+        String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        new_submission.setTitle(first_name + " " + last_name + " on " + dateString);
 
         Document submission_doc = Document.parse(new Gson().toJson(new_submission));
         coll.insertOne(submission_doc);
@@ -82,25 +87,6 @@ public class UploadHandler {
             Document commented_code_doc = Document.parse(new Gson().toJson(commentedCode));
             coll2.insertOne(commented_code_doc);
         }
-
-        // a new try.s
-//        MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
-//        MongoCollection<Document> coll = db.getCollection("commented_code");
-//
-//        System.out.println("request submission id is " + rf.submission_id);
-//
-//        Bson bsonFilter = Filters.eq("submissionId", rf.submission_id);
-//        FindIterable<Document> findIt = coll.find(bsonFilter);
-//        MongoCursor<Document> cursor = findIt.iterator();
-//
-//        List<CommentedCode> files = new ArrayList<>();
-//        while (cursor.hasNext()) {
-//            Document temp = cursor.next();
-//            CommentedCode file = new Gson().fromJson(temp.toJson(), commented_code.CommentedCode.class);
-////            System.out.println("submission id of file " + file.getSubmissionId());
-//            file.setId(temp.get("_id").toString());
-//            files.add(file);
-//        }
 
         return Response.ok(new Gson().toJson("[]"), MediaType.APPLICATION_JSON_TYPE).build();
     }
