@@ -49,12 +49,14 @@ public class AssignmentsHandler {
                 int id = rs.getInt("id");
                 String title = rs.getString("title");
                 String description = rs.getString("desc");
-                Assignment assignment = new Assignment(0, title, description, id);
+                Assignment assignment = new Assignment(id, title, description, id);
                 assignments.add(assignment);
             }
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-        return Response.ok(new Gson().toJson(assignments), MediaType.APPLICATION_JSON_TYPE).build();
+        String rrr = new Gson().toJson(assignments);
+        System.out.println(rrr);
+        return Response.ok(rrr, MediaType.APPLICATION_JSON_TYPE).build();
     }
 }

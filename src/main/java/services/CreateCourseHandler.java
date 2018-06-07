@@ -46,18 +46,15 @@ public class CreateCourseHandler {
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
                 int id = rs.getInt("id");
-                sqlQuery =
-                        "INSERT INTO course(title) " +
-                                "VALUES('" + title + "');";
+                sqlQuery = "INSERT INTO course(title) " + "VALUES('" + title + "');";
                 stmt.executeUpdate(sqlQuery);
 
                 sqlQuery = "SELECT LAST_INSERT_ID();";
                 rs = stmt.executeQuery(sqlQuery);
                 if (rs.next()) {
                     int course_id = Integer.parseInt(rs.getString(1));
-                    sqlQuery =
-                            "INSERT INTO teaching_course(user_id, course_id)" +
-                                    "VALUES(" + id + ", " + course_id + ");";
+                    sqlQuery = "INSERT INTO teaching_course " +
+                            "VALUES(" + id + ", " + course_id + ");";
                     stmt.executeUpdate(sqlQuery);
                 }
             }

@@ -20,6 +20,10 @@ public class App extends Application {
         singletons.add(new CoursesHandler());
         singletons.add(new AssignmentsHandler());
         singletons.add(new CreateCourseHandler());
+        singletons.add(new CreateAssignmentHandler());
+        singletons.add(new SubmissionsHandler());
+        singletons.add(new FilesHandler());
+        singletons.add(new UploadHandler());
     }
 
     public Set<Object> getSingletons()

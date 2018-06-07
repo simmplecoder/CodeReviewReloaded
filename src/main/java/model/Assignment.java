@@ -1,13 +1,13 @@
 package model;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 
 @Entity
 @Table(name="assignment")
 public class Assignment {
 
 	@Id
+    @GeneratedValue
     @Column(name = "id")
 	int id;
 
@@ -63,5 +63,9 @@ public class Assignment {
 
     public void setCourse_id(int course_id) {
         this.course_id = course_id;
+    }
+
+    public String toString() {
+        return this.id + " " + this.title + " " + this.desc + " " + this.course_id;
     }
 }

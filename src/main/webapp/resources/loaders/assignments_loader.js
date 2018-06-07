@@ -18,11 +18,14 @@ function assignments_loader(course_id) {
         let $infoDiv = $("<div>").addClass("w3-container w3-hide w3-padding-24").appendTo($adiv);
     
         $button.click(function() {
-            let description = assignment["description"];
+            let description = assignment["desc"];
+
+            console.log(description);
+
             let $div2 = $infoDiv;
             
             $div2.empty();
-            $div2.text(assignment["description"]);
+            $div2.text(description);
             let $uploadView = getUploadView(assignment["id"]);
             $div2.append($uploadView);
 

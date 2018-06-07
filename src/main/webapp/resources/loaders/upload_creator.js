@@ -39,14 +39,14 @@ function getUploadView(assignment_id) {
 
 function getUploadBtn($submissionsList, $uploadView, assignment_id) {
     let $uploadButton = $("<button>").text("Upload").click(function() {
-    		var temp = [];
-    		for (var i = 0; i < files.length; i++) {
-    			temp.push({"filename" : files[i].name, "content" : filesToUpload[i]});
-    		}
-    		
-    		var data = {"assignment_id" : assignment_id, "files" : temp};
-    	
-    		console.log(JSON.stringify(data));
+        var temp = [];
+        for (var i = 0; i < files.length; i++) {
+            temp.push({"filename" : files[i].name, "content" : filesToUpload[i]});
+        }
+
+        var data = {"assignment_id" : assignment_id, "files" : temp};
+
+        console.log(JSON.stringify(data));
 	    
 	    $submissionsList.empty();
 	

@@ -1,8 +1,8 @@
 function submissions_loader(assignment_id) {
 	var params = { "id" : assignment_id};
-	// var submissions = make_request("submissions", params);
+	var submissions = make_request("submissions", params);
 
-	var submissions = [{"title":"by Ibrakhim Ilyassov", "id" : "id01"}, {"title":"by Anuar Maratkhan", "id" : "id02"}];
+	// var submissions = [{"title":"by Ibrakhim Ilyassov", "id" : "id01"}, {"title":"by Anuar Maratkhan", "id" : "id02"}];
 	
 	var $ul = $("<ul>").addClass("w3-ul w3-panel  w3-light-grey w3-leftbar w3-border-green");
 	
@@ -17,7 +17,9 @@ function submissions_loader(assignment_id) {
 		let $div = $("<div>").addClass("w3-hide submission").appendTo($li);
 		
 		$button.click(function() {
+			console.log("getting files of submission with id " + submission["id"]);
 			let $files = getFiles(submission["id"]);
+            // let $files = getFiles("whatever");
 			$div.empty();
 			$div.append($files);
 			toggle($div, $button);

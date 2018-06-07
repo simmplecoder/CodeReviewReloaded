@@ -11,6 +11,8 @@
     padding: 2px;
     margin: 5px;
     box-shadow: inset 1px 1px 1px 1px #F6D946;
+    overflow:hidden;
+    word-wrap:break-word;
 }
 
 .editBlock {
