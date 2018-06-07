@@ -44,17 +44,18 @@ public class RegistrationHandler {
         HttpSession session = request.getSession();
         User user = new Gson().fromJson(json, User.class);
 
-        System.out.println(user);
-
         try {
             Session hsession = factory.getCurrentSession();
             hsession.beginTransaction();
             hsession.save(user);
+            hsession.flush();
             hsession.getTransaction().commit();
 
+//            System.out.println(user);
+//            System.out.println(user.getId());
             session.setAttribute("email", user.getEmail());
             session.setAttribute("isInstructor", 0);
-            session.setAttribute("user_id", user.getId());
+            session.setAttribute("user_id", String.valueOf(user.getId()));
             session.setAttribute("first_name", user.getFirst_name());
             session.setAttribute("last_name", user.getLast_name());
 

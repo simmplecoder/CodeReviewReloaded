@@ -7,6 +7,7 @@ import java.util.Set;
 @Table(name="user")
 public class User {
     @Id
+    @GeneratedValue(strategy = javax.persistence.GenerationType.IDENTITY)
     @Column(name="id")
     private int id;
 
