@@ -1,9 +1,11 @@
+<%@ page import="model.User" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%
-    if (session.getAttribute("email") == null) {
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
         response.sendRedirect("index.jsp");
     } else
-    if (session.getAttribute("email").equals("admin")) {
+    if (user.getEmail().equals("admin")) {
         response.sendRedirect("admin.jsp");
     }
 %>
@@ -51,16 +53,17 @@
     
 <header class="w3-container w3-green">
     <div class="w3-row">
-        <div class = "w3-col m10 l10">
+        <div class = "w3-col m10 l10 welcome_title">
             <h1>Code Review Tool</h1>
         </div>
         
         <div class = "w3-col m2 l2">
         		<div class="w3-dropdown-hover w3-right w3-cell-middle w3-center w3-green" style="height:100%;">
     			 	<div> <% 	String name = "some text";
-        					if (session.getAttribute("email") != null) {
-        						name = session.getAttribute("email").toString();
-        					}
+                            user = (User) session.getAttribute("user");
+                            if (user != null) {
+                                name = user.getFirst_name() + " " + user.getLast_name();
+                            }
         				%> 		
         				<h4> <%=name%> </h4>
   				</div>
@@ -95,6 +98,10 @@
 
     var parameters = {"registered" : false};
     $("#course_list").append(not_enrolled_course_loader(parameters));
+
+    $(".welcome_title").click(function(){
+        window.location = "home.jsp";
+    });
 
     function not_enrolled_course_loader(params) {
         var courses = make_request("courses", params);

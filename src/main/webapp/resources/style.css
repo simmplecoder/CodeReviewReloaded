@@ -19,3 +19,7 @@
     margin: 10px;   
     box-shadow: inset 1px 1px 1px 1px #F6D946;
 }
+
+.welcome_title {
+    cursor: pointer;
+}

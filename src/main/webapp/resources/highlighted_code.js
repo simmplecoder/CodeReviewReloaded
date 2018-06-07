@@ -1,4 +1,6 @@
 function HighlightedCode(dataa, file_id) {
+
+	console.log("file id is " + file_id);
 	var lines = dataa["lines"];
 	var arrayOfLines = [];
 	var arrayOfComments = [];
@@ -111,16 +113,17 @@ function HighlightedCode(dataa, file_id) {
                     "start" : startline,
                     "end" : endline,
                     "comment" : $commentInput.val(),
-                    "author" : "user"
+                    "author" : "default"
             };
 
-        		$editBlockRef.remove();
+            $editBlockRef.remove();
             editWindowOpened = false;
             comments.push(comment);
             console.log(comments);
             
             // SAVING COMMENT TO BACKEND.
-            // make_request("addComment", comment); // TODO
+            var result = make_request("addcomment", comment); // TODO
+            console.log(result);
             
             for (var line = startline; line <= endline; line++) {
 	        		arrayOfLines[line].removeClass("specialone");

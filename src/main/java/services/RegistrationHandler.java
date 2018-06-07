@@ -41,7 +41,6 @@ public class RegistrationHandler {
             return redirection;
         }
 
-        HttpSession session = request.getSession();
         User user = new Gson().fromJson(json, User.class);
 
         try {
@@ -50,15 +49,8 @@ public class RegistrationHandler {
             hsession.save(user);
             hsession.flush();
             hsession.getTransaction().commit();
-
 //            System.out.println(user);
 //            System.out.println(user.getId());
-            session.setAttribute("email", user.getEmail());
-            session.setAttribute("isInstructor", 0);
-            session.setAttribute("user_id", String.valueOf(user.getId()));
-            session.setAttribute("first_name", user.getFirst_name());
-            session.setAttribute("last_name", user.getLast_name());
-
             return Response.ok("home.jsp", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();

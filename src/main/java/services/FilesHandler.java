@@ -45,7 +45,7 @@ public class FilesHandler {
 
     public FilesHandler() {
         mongoClient = new MongoClient();
-        checking();
+//        checking();
     }
 
     @POST
@@ -73,12 +73,14 @@ public class FilesHandler {
         List<CommentedCode> files = new ArrayList<>();
         while (cursor.hasNext()) {
             Document temp = cursor.next();
+
+            System.out.println(temp.toJson());
             CommentedCode file = new Gson().fromJson(temp.toJson(), commented_code.CommentedCode.class);
-//            System.out.println("submission id of file " + file.getSubmissionId());
+
             file.setId(temp.get("_id").toString());
             files.add(file);
+            System.out.println("file:\n" + file);
         }
-
         return Response.ok(new Gson().toJson(files), MediaType.APPLICATION_JSON_TYPE).build();
     }
 

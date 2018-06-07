@@ -1,5 +1,7 @@
 package services;
 
+import model.User;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.ws.rs.core.Response;
@@ -15,8 +17,9 @@ public class RedirectionHandler {
 
     public Response redirection(boolean needLogin) {
         URI uri = null;
-        HttpSession session = request.getSession();
-        if (session.getAttribute("email") == null) {
+        User user = (User) request.getSession().getAttribute("user");
+
+        if (user == null) {
             if (needLogin) {
                 try {
                     uri = new URI("/index.jsp");

@@ -1,6 +1,7 @@
 package services;
 
 import com.google.gson.Gson;
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -10,8 +11,10 @@ import com.mongodb.client.model.Filters;
 import commented_code.Comment;
 import commented_code.CommentedCode;
 import commented_code.Submission;
+import model.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 import representations.FilesRequestFormat;
 
 import javax.servlet.ServletContext;
@@ -29,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.json.*;
+
+import static com.mongodb.client.model.Filters.eq;
 
 @Path("")
 public class UploadHandler {
@@ -53,29 +58,28 @@ public class UploadHandler {
         if (redirection != null)
             return redirection;
 
+        User user = (User) request.getSession().getAttribute("user");
+
         JSONObject submission = new JSONObject(json);
         JSONArray files = submission.getJSONArray("files");
         int assignment_id = submission.getInt("assignment_id");
 
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
-        MongoCollection<Document> coll = db.getCollection("submissions");
-        MongoCollection<Document> coll2 = db.getCollection("commented_code");
-
+        MongoCollection<Document> collectionOfSubmissions = db.getCollection("submissions");
+        MongoCollection<Document> collectionOfCodes = db.getCollection("commented_code");
 
         Submission new_submission = new Submission();
         new_submission.setAssignmentId(assignment_id);
 
         HttpSession session = request.getSession();
-        new_submission.setEmail(session.getAttribute("email").toString());
-        String first_name = session.getAttribute("first_name").toString();
-        String last_name = session.getAttribute("last_name").toString();
+        new_submission.setEmail(user.getEmail());
 
         Date date = new Date();
         String dateString = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-        new_submission.setTitle(first_name + " " + last_name + " on " + dateString);
+        new_submission.setTitle(user.getFirst_name() + " " + user.getLast_name() + " on " + dateString);
 
         Document submission_doc = Document.parse(new Gson().toJson(new_submission));
-        coll.insertOne(submission_doc);
+        collectionOfSubmissions.insertOne(submission_doc);
 
         String submission_id = submission_doc.get("_id").toString();
 
@@ -85,7 +89,7 @@ public class UploadHandler {
             commentedCode.setSubmissionId(submission_id);
             commentedCode.setName(file.getString("filename"));
             Document commented_code_doc = Document.parse(new Gson().toJson(commentedCode));
-            coll2.insertOne(commented_code_doc);
+            collectionOfCodes.insertOne(commented_code_doc);
         }
 
         return Response.ok(new Gson().toJson("[]"), MediaType.APPLICATION_JSON_TYPE).build();

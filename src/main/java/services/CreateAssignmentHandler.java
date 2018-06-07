@@ -49,11 +49,12 @@ public class CreateAssignmentHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createAssignment(String json) {
         Response redirection = new RedirectionHandler(request).redirection(true);
-        if (redirection != null) {
+        if (redirection != null)
             return redirection;
-        }
-        if (request.getSession().getAttribute("isInstructor") == null
-                || request.getSession().getAttribute("isInstructor").equals(0)) {
+
+        User user = (User) request.getSession().getAttribute("user");
+
+        if (user == null || user.getIsInstructor() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
 

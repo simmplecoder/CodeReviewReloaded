@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.Gson;
 import model.Course;
+import model.User;
 import representations.CoursesRequestFormat;
 
 import javax.servlet.ServletContext;
@@ -34,6 +35,9 @@ public class CoursesHandler {
         if (redirection != null) {
             return redirection;
         }
+
+        User user = (User) request.getSession().getAttribute("user");
+
         ArrayList<Course> courses = new ArrayList<>();
         HttpSession session = request.getSession();
 
@@ -41,17 +45,13 @@ public class CoursesHandler {
 
         System.out.println(requested);
 
-        if (!(session.getAttribute("isInstructor") == null) && session.getAttribute("isInstructor").equals(1)) {
+        if (user != null && user.getIsInstructor() == 1) {
             try {
                 Statement stmt = MySQLConnection.connect().createStatement();
                 String sqlQuery =
-                        "SELECT C.* " +
-                                "FROM teaching_course AS UC " +
-                                "INNER JOIN user AS U " +
-                                "ON UC.user_id = U.id " +
-                                "INNER JOIN course AS C " +
-                                "ON UC.course_id = C.id " +
-                                "WHERE U.email = \"" + session.getAttribute("email") + "\";";
+                        "SELECT C.* " + "FROM teaching_course AS UC " + "INNER JOIN user AS U " +
+                                "ON UC.user_id = U.id " + "INNER JOIN course AS C " + "ON UC.course_id = C.id " +
+                                "WHERE U.email = \"" + user.getEmail() + "\";";
                 ResultSet rs = stmt.executeQuery(sqlQuery);
 
                 while (rs.next()) {
@@ -65,12 +65,11 @@ public class CoursesHandler {
             }
         } else {
             String sqlQuery = "";
-            String email = session.getAttribute("email").toString();
             if (requested.registered == true) {
-                sqlQuery = "select * from enrolled_course as ec, course as c  where ec.course_id = c.id and ec.user_id = " + session.getAttribute("user_id") + ";";
+                sqlQuery = "select * from enrolled_course as ec, course as c  where ec.course_id = c.id and ec.user_id = " + user.getId() + ";";
             } else {
                 sqlQuery = "select * from course where id not in (select ec.course_id from enrolled_course as ec, user as u where u.email = \"" +
-                    email + "\" and u.id = ec.user_id);";
+                    user.getEmail() + "\" and u.id = ec.user_id);";
             }
 
             try {

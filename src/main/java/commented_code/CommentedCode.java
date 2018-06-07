@@ -44,4 +44,8 @@ public class CommentedCode {
 	public void addComment(Comment comment) {
 		comments.add(comment);
 	}
+
+	public String toString() {
+	    return "file id: " + id + ", submissionId: " + submissionId + ", filename: " + name;
+    }
 }

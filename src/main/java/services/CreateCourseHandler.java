@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import model.User;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -28,25 +29,25 @@ public class CreateCourseHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public Response createCourse(String json) {
         Response redirection = new RedirectionHandler(request).redirection(true);
-        if (redirection != null) {
+        if (redirection != null)
             return redirection;
-        }
-        if (request.getSession().getAttribute("isInstructor") == null
-                || request.getSession().getAttribute("isInstructor").equals(0)) {
+
+        User user = (User) request.getSession().getAttribute("user");
+        if (user == null || user.getIsInstructor() == 0) {
             return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
+
         JsonObject params = new JsonParser().parse(json).getAsJsonObject();
-        String title = params.get("coursename").getAsString();
-        String instructor = (String) request.getSession().getAttribute("email");
+        String coursename = params.get("coursename").getAsString();
         try {
             Statement stmt = MySQLConnection.connect().createStatement();
             String sqlQuery =
                     "SELECT * FROM user " +
-                            "WHERE email='" + instructor + "';";
+                            "WHERE email='" + user.getEmail() + "';";
             ResultSet rs = stmt.executeQuery(sqlQuery);
             if (rs.next()) {
                 int id = rs.getInt("id");
-                sqlQuery = "INSERT INTO course(title) " + "VALUES('" + title + "');";
+                sqlQuery = "INSERT INTO course(title) " + "VALUES('" + coursename + "');";
                 stmt.executeUpdate(sqlQuery);
 
                 sqlQuery = "SELECT LAST_INSERT_ID();";

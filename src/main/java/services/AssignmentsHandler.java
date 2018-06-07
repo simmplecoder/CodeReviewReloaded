@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.Gson;
 import model.Assignment;
+import model.User;
 import representations.AssignmentsRequestFormat;
 
 import javax.servlet.ServletContext;

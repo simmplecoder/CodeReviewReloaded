@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 
 import commented_code.Submission;
+import model.User;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -26,6 +27,8 @@ import javax.ws.rs.core.Response;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mongodb.client.model.Filters.and;
+
 @Path("")
 public class SubmissionsHandler {
     @Context
@@ -34,7 +37,6 @@ public class SubmissionsHandler {
     private ServletContext context;
 
     private MongoClient mongoClient = null;
-
 
     public SubmissionsHandler() {
         mongoClient = new MongoClient();
@@ -46,9 +48,9 @@ public class SubmissionsHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAssignments(String json) {
         Response redirection = new RedirectionHandler(request).redirection(true);
-        if (redirection != null) {
-            return redirection;
-        }
+        if (redirection != null) { return redirection; }
+
+        User user = (User) request.getSession().getAttribute("user");
 
         SubmissionsRequestFormat rf = new Gson().fromJson(json, SubmissionsRequestFormat.class);
 
@@ -56,18 +58,20 @@ public class SubmissionsHandler {
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
         MongoCollection<Document> coll = db.getCollection("submissions");
 
-//        System.out.println(rf.id);
+//        System.out.println(rf.id);;
+        Bson filter = Filters.eq("assignmentId", rf.id);
+        if (user.getIsInstructor() == 0)
+            filter = and(filter, Filters.eq("email", user.getEmail()));
 
-        Bson bsonFilter = Filters.eq("assignmentId", rf.id);
-        FindIterable<Document> findIt = coll.find(bsonFilter);
+        FindIterable<Document> findIt = coll.find(filter);
+
         MongoCursor<Document> cursor = findIt.iterator();
 
         List<Submission> submissions = new ArrayList<>();
         while (cursor.hasNext()) {
             Document temp = cursor.next();
-            Submission submis = new Gson().fromJson(temp.toJson(), commented_code.Submission.class);
+            Submission submis = new Gson().fromJson(temp.toJson(), Submission.class);
             submis.setId(temp.get("_id").toString());
-//                System.out.println(submis.getId());
             submissions.add(submis);
             System.out.println("Submission " + submis);
         }
