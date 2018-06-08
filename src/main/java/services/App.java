@@ -26,6 +26,8 @@ public class App extends Application {
         singletons.add(new UploadHandler());
         singletons.add(new CourseRegistrationHandler());
         singletons.add(new AddCommentHandler());
+        singletons.add(new UsersHandler());
+        singletons.add(new GrantPrivilegeHandler());
     }
 
     public Set<Object> getSingletons()

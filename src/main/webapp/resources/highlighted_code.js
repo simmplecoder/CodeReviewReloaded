@@ -47,9 +47,6 @@ function HighlightedCode(dataa, file_id) {
         $div.data("startline", comment["start"]);
         $div.data("endline", comment["end"]);
         
-        console.log(comment["startline"]);
-        console.log(comment["endline"]);
-        
         $div.on("click", function() {
         		// Resetting all comments and lines before highlighting.
             // specific one.
@@ -108,36 +105,50 @@ function HighlightedCode(dataa, file_id) {
         var $cancelButton = $("<button>").addClass("w3-btn w3-red").text("Cancel").appendTo($addCommentBlock);
         
         $submitButton.click(function() {
+            var commentText = $commentInput.val();
         		var comment = {
                     "file_id" : file_id, 
                     "start" : startline,
                     "end" : endline,
-                    "comment" : $commentInput.val(),
+                    "comment" : commentText,
                     "author" : "default"
-            };
+                };
 
             $editBlockRef.remove();
             editWindowOpened = false;
-            comments.push(comment);
-            console.log(comments);
             
             // SAVING COMMENT TO BACKEND.
-            var result = make_request("addcomment", comment); // TODO
-            console.log(result);
+            var promise = new Promise(function(resolve, reject) {
+                var result = make_request("addcomment", comment)
+                // console.log(result["comment"]);
+                if (result["comment"] && result["comment"] === commentText) {
+                    resolve("Comment successfully added!");
+                    comments.push(result);
+                    fillWithLineAndComments();
+                } else {
+                    reject(Error("Comment adding failed!"));
+                }
+            });
+
+            promise.then(function(result) {
+                console.log(result); // "Stuff worked!"
+            }, function(err) {
+                console.log(err); // Error: "It broke"
+            });
             
             for (var line = startline; line <= endline; line++) {
-	        		arrayOfLines[line].removeClass("specialone");
+                arrayOfLines[line].removeClass("specialone");
 	        }
-            
-            fillWithLineAndComments();
+
             $('pre').each(function(i, block) {
 				hljs.highlightBlock(block);
 			});
+
             document.getSelection().removeAllRanges();
         });
         
         $cancelButton.click(function() {
-    			$editBlockRef.remove();
+            $editBlockRef.remove();
             editWindowOpened = false;
             
             for (var line = startline; line <= endline; line++) {

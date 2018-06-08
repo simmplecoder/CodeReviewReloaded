@@ -1,6 +1,6 @@
 function getFiles(submission_id) {
-	var params = { "submission_id" : submission_id};
-	var files = make_request("files", params);
+	let params = { "submission_id" : submission_id};
+	let files = make_request("files", params);
 	// console.log(files);
 	
 	let $ul = $("<ul>").addClass("w3-ul w3-panel  w3-light-grey w3-leftbar w3-border-red");

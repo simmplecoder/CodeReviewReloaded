@@ -4,8 +4,7 @@
     User user = (User) session.getAttribute("user");
     if (user == null) {
         response.sendRedirect("index.jsp");
-    } else
-    if (user.getEmail().equals("admin")) {
+    } else if (user.getEmail().equals("admin")) {
         response.sendRedirect("admin.jsp");
     }
 %>

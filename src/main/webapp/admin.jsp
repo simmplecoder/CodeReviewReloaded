@@ -1,12 +1,13 @@
+<%@ page import="model.User" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
+
 <%
-    if (session.getAttribute("email") == null) {
+    User user = (User) session.getAttribute("user");
+    if (user == null || user.getEmail().equals("admin") == false) {
         response.sendRedirect("index.jsp");
-    } else
-    if (!session.getAttribute("email").equals("admin")) {
-        response.sendRedirect("home.jsp");
     }
 %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,6 +24,7 @@
 	
 	<!-- Local JS libraries -->
 	<script type="text/javascript" src="resources/loaders/make_request.js"></script>
+    <script type="text/javascript" src="resources/loaders/users_loader.js"></script>
 
 </head>
 <body>
@@ -41,67 +43,30 @@
 
 	<div class = "w3-container">
 		<div class = "w3-row">
-			<div class = "w3-col m1 l1 w3-right w3-cell-middle">
-				<p> <button id="switcher" class="w3-button w3-green" onclick="switchLogging();"> Switch </button> </p>
-			</div>
-			
-			<div class = "w3-col m3 l3 w3-left w3-cell-middle">
-				<p> From: <input type="text" id="datepickerFrom"></p>
-			</div>
-			<div class = "w3-col m4 l4 w3-center w3-cell-middle">
-				<p> To: <input type="text" id="datepickerTo"></p>
-			</div>
-			<div class = "w3-col m3 l3 w3-cell-middle">
-				<p> <input class="w3-check" type="checkbox" id = "checkboxlogs" > Login logs.</p>
-				<p> <input class="w3-check" type="checkbox" id = "checkboxregisters" > Register logs.</p>
-				<p> <input class="w3-check" type="checkbox" id = "checkboxuploads" > Upload logs.</p>
-				
-			</div>
-			<div class = "w3-col m1 l1 w3-right w3-cell-middle">
-				<p> <button class="w3-button w3-green" onclick="findLogs();"> Find </button> </p>
-			</div>
-		</div>
-	
-		<div class = "w3-row w3-center">
-			<div id = "results" class = "w3-col m12 l12" style="margin-top: 10px;">
-			</div>
-		</div>
+            <h2 class = "w3-pale-green w3-padding-large" >Instructors </h2>
+
+            <div class = "w3-container" id = "instructor_list">
+
+            </div>
+
+        </div>
+
+        <div class = "w3-row">
+            <h2 class = "w3-pale-green w3-padding-large" >Students </h2>
+
+            <div class = "w3-container" id = "student_list">
+
+            </div>
+
+        </div>
 	</div>
 </body>
 
 <script>
 
-	function dummyRequest(url) {
-		var request = $.ajax({
-	        type: "POST",
-	        url: "services/" + url,
-	        contentType: "application/json",
-	        async: false,
-	    });
-	
-		var result;
-	    request.success(function (response) {
-	        result = response;
-	    });
-	    return result;
-	}
 
-	function loggingStatus() {
-	   	var response = dummyRequest("loggingison");
-	   	console.log(response);
-        if (response === "YES") {
-        		$("#switcher").text("Turn OFF log");
-        } else {
-        		$("#switcher").text("Turn ON log");
-        }
-	}
-	
-	loggingStatus();
-	
-	function switchLogging() {
-		dummyRequest("loggingswitch");
-		loggingStatus();
-	}
+    $("#instructor_list").append(users_loader(1));
+    $("#student_list").append(users_loader(0));
 	
 	function logout() {
         var request = $.ajax({
@@ -109,61 +74,10 @@
             url: "services/logout",
             async: false
         });
-
         request.success(function (data, textStatus, xhr) {
             window.location = data;
-        })
+        });
     }
-
-	$(function() {
-		$( "#datepickerFrom" ).datepicker({
-			dateFormat: "yy-mm-dd"
-		});
-	});
-
-	$( function() {
-		$( "#datepickerTo" ).datepicker({
-		dateFormat: "yy-mm-dd"
-		});
-	});
-
-	function findLogs() {
-		var from = $("#datepickerFrom").val();
-		var to = $("#datepickerTo").val();
-		
-		var types = [];
-		if ($("#checkboxlogs").is(':checked'))
-			types.push("login");
-		
-		if ($("#checkboxregisters").is(':checked'))
-			types.push("register");
-		
-		if ($("#checkboxuploads").is(':checked'))
-			types.push("upload");
-	
-		var params = {"from" : from, "to" : to, "types": types};
-		
-		console.log(JSON.stringify(params));
-		
-		var logs = make_request("loggingsearch", params);
-		
-		console.log(logs);
-		
-		// var logs = [{"types" : "Login", "message" : "Failing login service.", "date" : "12.04.2018"}, {"types" : "Register", "message" : "Failing register service.", "date" : "20.04.2018"}, {"types" : "Upload", "message" : "Upload login service.", "date" : "04.04.2018"}];
-		
-		$("#results").empty();
-		
-		var $ul = $("<ul class ='w3-ul'>");
-		for (let i = 0; i < logs.length; i++) {
-			let log = logs[i];
-			let $li = $("<li>");
-			$li.addClass("w3-padding-small w3-hover-pale-green");
-			$li.text(log["type"] + " : " + log["date"] + " : " + log["message"]);
-			$ul.append($li);
-		}
-		
-		$("#results").append($ul);
-	}
 
 </script>
 

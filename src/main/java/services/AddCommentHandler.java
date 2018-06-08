@@ -66,7 +66,7 @@ public class AddCommentHandler {
 //        System.out.println(collectionOfCodes.find(filter));
         collectionOfCodes.updateOne(filter, new Document("$push", new Document("comments", Document.parse(new Gson().toJson(comment)))));
 
-        return Response.ok(new Gson().toJson("[]"), MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(new Gson().toJson(comment), MediaType.APPLICATION_JSON_TYPE).build();
     }
 }
 

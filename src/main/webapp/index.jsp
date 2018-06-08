@@ -1,9 +1,15 @@
+<%@ page import="model.User" %>
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%
-	if (session.getAttribute("email") != null) {
-		response.sendRedirect("home.jsp");
-	}
-%>
+
+<%--<%--%>
+	<%--User user = (User) session.getAttribute("user");--%>
+	<%--if (user == null) {--%>
+		<%--response.sendRedirect("index.jsp");--%>
+	<%--} else if (user.getEmail().equals("admin")) {--%>
+		<%--response.sendRedirect("admin.jsp");--%>
+	<%--}--%>
+<%--%>--%>
+
 <!DOCTYPE html>
 <html>
 <head>
