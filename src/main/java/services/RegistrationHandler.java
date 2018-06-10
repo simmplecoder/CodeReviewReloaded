@@ -51,6 +51,9 @@ public class RegistrationHandler {
             hsession.getTransaction().commit();
 //            System.out.println(user);
 //            System.out.println(user.getId());
+
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
             return Response.ok("home.jsp", MediaType.TEXT_PLAIN).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode()).build();
