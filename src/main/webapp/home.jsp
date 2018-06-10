@@ -68,7 +68,10 @@
   				</div>
   				
 	      		<div class="w3-dropdown-content w3-bar-block w3-card" style="right:0">
-                    <button class = "w3-button w3-text-green w3-hover-green w3-block" onclick="redirect_to_register();"> Register to a course </button>
+                    <%if (user != null && user.getIsInstructor() == 0) { %>
+                        <button class = "w3-button w3-text-green w3-hover-green w3-block" onclick="redirect_to_register();"> Register to a course </button>
+                    <% } %>
+
        				<button class = "w3-button w3-text-green w3-hover-green w3-block "> Settings </button>
        				<button class = "w3-button w3-text-green w3-hover-green w3-block" onclick="logout();"> Exit </button>
 	       		</div>

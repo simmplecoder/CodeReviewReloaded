@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -35,6 +37,8 @@ public class LoginHandler {
     @Context
     private ServletContext context;
 
+    private static final Logger logger = LogManager.getLogger();
+
     SessionFactory factory;
 
     public LoginHandler() {
@@ -52,23 +56,26 @@ public class LoginHandler {
         Response.ResponseBuilder builder;
         HttpSession session = request.getSession();
 
-        LoginAttempt loginAttempt = new Gson().fromJson(json, LoginAttempt.class);
-        String email = loginAttempt.username;
-        String password = loginAttempt.password;
+        LoginAttempt attempt = new Gson().fromJson(json, LoginAttempt.class);
+        System.out.println("LoginAttemp: " + attempt);
 
         Session hsession = factory.getCurrentSession();
 
         hsession.beginTransaction();
-        List<User> list = hsession.createQuery("from User u where u.email='" + email + "' and u.password='" + password + "'").list();
+        List<User> list = hsession.createQuery("from User u where u.email=:email and u.password=:password").
+                setParameter("email", attempt.email).
+                setParameter("password", attempt.password).
+                list();
+        hsession.getTransaction().commit();
 
         if (list.size() > 0) {
             session.setAttribute("user", list.get(0));
             builder = Response.ok("home.jsp", MediaType.TEXT_PLAIN);
+
+            logger.info("User" + " " + list.get(0) + " " + "successfully logged in!");
         } else {
             builder = Response.status(Response.Status.UNAUTHORIZED);
         }
-
-        hsession.getTransaction().commit();
         return builder.build();
     }
 

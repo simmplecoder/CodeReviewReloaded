@@ -135,7 +135,7 @@
 
     function performLogin(){
         var params = {};
-        params.username = $("#loginEmail").val();
+        params.email = $("#loginEmail").val();
         params.password = $("#loginPassword").val();
 
         sendLoginRequest(params);

@@ -15,7 +15,7 @@ public class MySQLConnection {
             conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:" + localPort + "/CodeReviewTool",
                     "root",
-                    "crt2018A");
+                    "crt2018");
         } catch (Exception e) {
             e.printStackTrace();
         }

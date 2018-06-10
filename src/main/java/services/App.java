@@ -1,5 +1,8 @@
 package services;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -13,6 +16,8 @@ import java.util.Set;
 public class App extends Application {
     private Set<Object> singletons = new HashSet<>();
     private Set<Class<?>> classes = new HashSet<>();
+
+    private static final Logger logger = LogManager.getLogger();
 
     public App(@Context ServletContext context) {
         singletons.add(new LoginHandler());
@@ -28,6 +33,8 @@ public class App extends Application {
         singletons.add(new AddCommentHandler());
         singletons.add(new UsersHandler());
         singletons.add(new GrantPrivilegeHandler());
+
+        logger.info("Loaded all services");
     }
 
     public Set<Object> getSingletons()
