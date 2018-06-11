@@ -66,6 +66,7 @@ public class LoginHandler {
                 setParameter("email", attempt.email).
                 setParameter("password", attempt.password).
                 list();
+
         hsession.getTransaction().commit();
 
         if (list.size() > 0) {

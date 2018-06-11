@@ -2,6 +2,7 @@ package services;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import model.User;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -32,15 +33,14 @@ public class CourseRegistrationHandler {
             return redirection;
         }
 
+        User user = (User) request.getSession().getAttribute("user");
+
         JsonObject params = new JsonParser().parse(json).getAsJsonObject();
         int course_id = params.get("course_id").getAsInt();
 
         try {
             Statement stmt = MySQLConnection.connect().createStatement();
-            String idd = request.getSession().getAttribute("user_id").toString();
-            int user_id = Integer.valueOf(idd);
-
-            String sqlQuery = "INSERT INTO enrolled_course " + "VALUES(" + user_id + ", " + course_id + ");";
+            String sqlQuery = "INSERT INTO enrolled_course " + "VALUES(" + user.getId() + ", " + course_id + ");";
             stmt.executeUpdate(sqlQuery);
 
         } catch (Exception e) {
