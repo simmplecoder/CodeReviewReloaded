@@ -27,6 +27,11 @@ function HighlightedCode(dataa, file_id) {
 		$li.mouseup(function() {
 	        endline = $(this).data("lineNumber");
 			createAddCommentBlock();
+
+            // document.getSelection();
+            // console.log("selection start " + $(this).prop("selectionStart"));
+            // console.log("selection end " + $(this).prop("selectionEnd"));
+
 	    });
 	    
 		return $li;
@@ -54,6 +59,7 @@ function HighlightedCode(dataa, file_id) {
             console.log(start);
             console.log(end);
 
+
             for (let line = 0; line < arrayOfLines.length; line++) {
                 arrayOfLines[line].removeClass("specialone");
                 if (start <= line && line <= end && open === false)
@@ -61,9 +67,9 @@ function HighlightedCode(dataa, file_id) {
 		    }
 
             if (open === true) {
-                $(this).data["open"] = false;
+                $(this).data("open", false);
             } else {
-                $(this).data["open"] = true;
+                $(this).data("open", true);
             }
         });
         
