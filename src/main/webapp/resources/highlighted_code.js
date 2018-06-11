@@ -1,20 +1,18 @@
 function HighlightedCode(dataa, file_id) {
 
 	console.log("file id is " + file_id);
+
 	var lines = dataa["lines"];
-	var arrayOfLines = [];
-	var arrayOfComments = [];
+	var arrayOfLines = [], arrayOfComments = [];
+	var comments = dataa["comments"];
+	var startline, endline;
 	
-	function SortByEndline(a, b){
+	var $ol = $("<ol>");
+
+    function SortByEndline(a, b){
         var aIndex = a['end'], bIndex = b['end'];
         return ((aIndex < bIndex) ? -1 : ((aIndex > bIndex) ? 1 : 0));
     }
-
-	var comments = dataa["comments"];
-	var startline;
-	var endline;
-	
-	var $ol = $("<ol>");
 	
 	function createLine(text, lineNumber) {
 		var $li = $("<li>").addClass("code");
@@ -35,48 +33,38 @@ function HighlightedCode(dataa, file_id) {
 	}
 
 	function createComment(comment, startline, endline) {
-		var $div = $("<div>").addClass("codecomment");
-        var $span = $("<b>").appendTo($div).css({"color" : "purple"});
-        $span.text(comment["author"]);
-        $div.append(" - " + comment["comment"]);
-        $div.addClass("noselection");
-        
-        $div.append(" - " + data['comment']);
-        $div.data("multiply", 5);
-        $div.data("full_comment", data['comment']);
+		let $div = $("<div>").addClass("codecomment noselection").css({"font-family": "sans-serif"});
+        let $span = $("<b>").appendTo($div).text(comment["author"]).css({color:"#e33465"});
+        $div.append(" : " + comment["comment"]);
+
+        $div.data("full_comment", comment['comment']);
         $div.data("startline", comment["start"]);
         $div.data("endline", comment["end"]);
-        
+        $div.data("open", false);
+
         $div.on("click", function() {
-        		// Resetting all comments and lines before highlighting.
-            // specific one.
-            for (var i = 0; i < arrayOfComments.length; i++) {
-            		var multiply = arrayOfComments[i].data("multiply");
-            		if ($(this).is(arrayOfComments[i]) === false && multiply === 1 / 5) {
-            			console.log(arrayOfComments[i].data("multiply"));
-            			arrayOfComments[i].height(arrayOfComments[i].height() * multiply);
-            			arrayOfComments[i].data("multiply", 1 / multiply);
-            		}
-            }
-            
-            var multiply = $(this).data("multiply");
-            $(this).height($(this).height() * multiply);
-            $(this).data("multiply", 1 / multiply);
-            
-            console.log( $(this).data("startline"));
-            console.log( $(this).data("endline"));
-            console.log( $(this).data("multiply"));
-            
-            for (var i = 0; i < arrayOfLines.length; i++) {
-            		arrayOfLines[i].removeClass("specialone");
-            }
-            
-            for (var line = $(this).data("startline"); line <= $(this).data("endline"); line++) {
-	        		if (multiply === 5)
-	        			arrayOfLines[line].addClass("specialone");
-	        		else
-	            		arrayOfLines[line].removeClass("specialone");
+
+            console.log("clicked");
+
+            let start = $(this).data("startline");
+            let end = $(this).data("endline");
+            let open = $(this).data("open");
+
+            console.log(open);
+            console.log(start);
+            console.log(end);
+
+            for (let line = 0; line < arrayOfLines.length; line++) {
+                arrayOfLines[line].removeClass("specialone");
+                if (start <= line && line <= end && open === false)
+                    arrayOfLines[line].addClass("specialone");
 		    }
+
+            if (open === true) {
+                $(this).data["open"] = false;
+            } else {
+                $(this).data["open"] = true;
+            }
         });
         
 		return $div;
