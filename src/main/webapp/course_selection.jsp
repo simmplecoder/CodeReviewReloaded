@@ -42,11 +42,6 @@
     
     <link rel="stylesheet" href="resources/css/atom-one-light.min.css">
     <link rel="stylesheet" href="resources/css/w3override.css">
-
-    <!-- Loading jsons, later should be replaced with Ajax Requests  -->
-    <script type="text/javascript" src="resources/json/data.json"></script>
-    <script type="text/javascript" src="resources/json/submissions.json"></script>
-    <script type="text/javascript" src="resources/json/submissions2.json"></script>
     
 </head>
 <body>

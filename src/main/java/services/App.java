@@ -32,6 +32,7 @@ public class App extends Application {
         singletons.add(new CourseRegistrationHandler());
         singletons.add(new AddCommentHandler());
         singletons.add(new UsersHandler());
+        singletons.add(new AppExceptionHandler());
         singletons.add(new GrantPrivilegeHandler());
 
         logger.info("Loaded all services");
