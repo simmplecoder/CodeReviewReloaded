@@ -25,14 +25,14 @@ public class LoginHanlderTest {
 
     @Test
     public void testLogin() throws IOException {
-        LoginAttempt attemp = new LoginAttempt();
-        attemp.email = "btyler@nu.edu.kz";
-        attemp.password = "qwerty";
-
-        AuthentificationHandler handler = new AuthentificationHandler();
-
-        Response response = handler.login(new Gson().toJson(attemp));
-        System.out.print(response.getStatus());
+//        LoginAttempt attemp = new LoginAttempt();
+//        attemp.email = "btyler@nu.edu.kz";
+//        attemp.password = "qwerty";
+//
+//        AuthentificationHandler handler = new AuthentificationHandler();
+//
+//        Response response = handler.login(new Gson().toJson(attemp));
+//        System.out.print(response.getStatus());
 
 
 //        CloseableHttpClient client = HttpClients.createDefault();
