@@ -19,9 +19,12 @@ public class App extends Application {
 
     private static final Logger logger = LogManager.getLogger();
 
-    public App(@Context ServletContext context) {
-        singletons.add(new LoginHandler());
-        singletons.add(new RegistrationHandler());
+    public App() {
+//        public App(@Context ServletContext context) {
+//        singletons.add(new LoginHandler());
+//        singletons.add(new RegistrationHandler());
+        singletons.add(new AuthentificationHandler());
+
         singletons.add(new CoursesHandler());
         singletons.add(new AssignmentsHandler());
         singletons.add(new CreateCourseHandler());
