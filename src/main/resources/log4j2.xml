@@ -5,11 +5,7 @@
             <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
 
-        <File name="FileOutput" fileName="${sys:catalina.base}/logs/CodeReviewToolLogs/CodeReviewTool.log">
-            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </File>
-
-        <File name="FileOutput2" fileName="~/logs/CodeReviewToolLogs/CodeReviewTool.log">
+        <File name="FileOutput" fileName="${sys:catalina.base}/project_logs/CodeReviewTool/CodeReviewTool.log">
             <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
 
@@ -18,7 +14,6 @@
         <Root level="INFO">
             <AppenderRef ref="Console"/>
             <AppenderRef ref="FileOutput"/>
-            <AppenderRef ref="FileOutput2"/>
         </Root>
     </Loggers>
 </Configuration>
