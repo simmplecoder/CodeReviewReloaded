@@ -2,7 +2,8 @@ package services;
 
 import com.google.gson.Gson;
 import model.Assignment;
-import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import representations.AssignmentsRequestFormat;
 
 import javax.servlet.ServletContext;
@@ -25,6 +26,8 @@ public class AssignmentsHandler {
     @Context
     private ServletContext context;
 
+    private static final Logger logger = LogManager.getLogger(AssignmentsHandler.class);
+
     @POST
     @Path("assignments")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -37,27 +40,23 @@ public class AssignmentsHandler {
 
         ArrayList<Assignment> assignments = new ArrayList<>();
         AssignmentsRequestFormat requestFormat = new Gson().fromJson(json, AssignmentsRequestFormat.class);
-
+        int courseId = requestFormat.id;
         try {
             Statement stmt = MySQLConnection.connect().createStatement();
-            String sqlQuery =
-                    "select * " +
-                            "from assignment " +
-                            "where course_id=" + requestFormat.id+";";
+            String sqlQuery = "select * from assignment where course_id = " + courseId + ";";
             ResultSet rs = stmt.executeQuery(sqlQuery);
 
             while(rs.next()) {
                 int id = rs.getInt("id");
                 String title = rs.getString("title");
                 String description = rs.getString("desc");
-                Assignment assignment = new Assignment(id, title, description, id);
-                assignments.add(assignment);
+                assignments.add(new Assignment(id, title, description, id));
             }
+            logger.info("Successfully retrieved assignment for course id " + courseId)
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Could not retrieve assignments for course id " + courseId);
+            logger.error("Exception message: " + e);
         }
-        String rrr = new Gson().toJson(assignments);
-        System.out.println(rrr);
-        return Response.ok(rrr, MediaType.APPLICATION_JSON_TYPE).build();
+        return Response.ok(new Gson().toJson(assignments), MediaType.APPLICATION_JSON_TYPE).build();
     }
 }

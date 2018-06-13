@@ -3,6 +3,8 @@ package services;
 import com.google.gson.Gson;
 import model.Assignment;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -37,11 +39,7 @@ public class CreateAssignmentHandler {
     @Context
     private ServletContext context;
 
-    SessionFactory factory;
-
-    public CreateAssignmentHandler() {
-        factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
-    }
+    private static final Logger logger = LogManager.getLogger(CreateAssignmentHandler.class);
 
     @POST
     @Path("createassignment")
@@ -55,27 +53,26 @@ public class CreateAssignmentHandler {
         User user = (User) request.getSession().getAttribute("user");
 
         if (user == null || user.getIsInstructor() == 0) {
+            logger.info("User is not an instructor");
             return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
 
         JsonObject params = new JsonParser().parse(json).getAsJsonObject();
+        int course_id = params.get("course_id").getAsInt();
         String title = params.get("title").getAsString();
         String desc = params.get("description").getAsString();
-        int course_id = params.get("course_id").getAsInt();
 
         Assignment assignment = new Assignment(title, desc, course_id);
-
-        System.out.println(assignment);
 
         try {
             Statement stmt = MySQLConnection.connect().createStatement();
             String sqlQuery = "INSERT INTO assignment " +
-                        "values(null, \""+title+"\", \""+desc+"\", "+course_id+");";
-            System.out.println(sqlQuery);
-
+                        "values(null, '" + title + "', '" + desc + "', " + course_id + ");";
             stmt.executeUpdate(sqlQuery);
+            logger.info("Created assignment of course id " + course_id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Failed to create assignment to course id " + course_id);
+            logger.error("Exception message: " + e);
         }
         return Response.ok().build();
     }

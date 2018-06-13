@@ -3,12 +3,9 @@ package services;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javax.servlet.ServletContext;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
-import javax.ws.rs.core.Context;
 
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,11 +17,7 @@ public class App extends Application {
     private static final Logger logger = LogManager.getLogger();
 
     public App() {
-//        public App(@Context ServletContext context) {
-//        singletons.add(new LoginHandler());
-//        singletons.add(new RegistrationHandler());
         singletons.add(new AuthentificationHandler());
-
         singletons.add(new CoursesHandler());
         singletons.add(new AssignmentsHandler());
         singletons.add(new CreateCourseHandler());

@@ -53,10 +53,10 @@ public class AuthentificationHandler {
         Session hibernate = factory.getCurrentSession();
 
         hibernate.beginTransaction();
-        List<User> list = hibernate.createQuery("from User u where u.email=:email and u.password=:password").
-                setParameter("email", attempt.email).
-                setParameter("password", attempt.password).
-                list();
+        List<User> list = (List<User>) hibernate.createQuery("from User u where u.email=:email and u.password=:password")
+                .setParameter("email", attempt.email)
+                .setParameter("password", attempt.password)
+                .list();
 
         hibernate.getTransaction().commit();
 
@@ -120,7 +120,7 @@ public class AuthentificationHandler {
 
         User user = (User) request.getSession().getAttribute("user");
 
-        logger.info("A new user registered to the system " + user);
+        logger.info("A user: " + user + " successfully logged out!");
 
         request.getSession().removeAttribute("user");
 
