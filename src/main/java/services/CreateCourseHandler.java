@@ -3,6 +3,8 @@ package services;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,8 @@ public class CreateCourseHandler {
     @Context
     private ServletContext context;
 
+    private static final Logger logger = LogManager.getLogger(CreateCourseHandler.class);
+
     @POST
     @Path("createcourse")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -33,34 +37,31 @@ public class CreateCourseHandler {
             return redirection;
 
         User user = (User) request.getSession().getAttribute("user");
+
         if (user == null || user.getIsInstructor() == 0) {
+            logger.error("User: " + user + " is not an instructor course creation is not possible.");
             return Response.status(Response.Status.UNAUTHORIZED.getStatusCode()).build();
         }
 
         JsonObject params = new JsonParser().parse(json).getAsJsonObject();
-        String coursename = params.get("coursename").getAsString();
+        String title = params.get("coursename").getAsString();
+
         try {
             Statement stmt = MySQLConnection.connect().createStatement();
-            String sqlQuery =
-                    "SELECT * FROM user " +
-                            "WHERE email='" + user.getEmail() + "';";
-            ResultSet rs = stmt.executeQuery(sqlQuery);
-            if (rs.next()) {
-                int id = rs.getInt("id");
-                sqlQuery = "INSERT INTO course(title) " + "VALUES('" + coursename + "');";
-                stmt.executeUpdate(sqlQuery);
+            stmt.executeUpdate("insert into course " + "values(null, '" + title + "');");
 
-                sqlQuery = "SELECT LAST_INSERT_ID();";
-                rs = stmt.executeQuery(sqlQuery);
-                if (rs.next()) {
-                    int course_id = Integer.parseInt(rs.getString(1));
-                    sqlQuery = "INSERT INTO teaching_course " +
-                            "VALUES(" + id + ", " + course_id + ");";
-                    stmt.executeUpdate(sqlQuery);
-                }
-            }
+            ResultSet rs = stmt.executeQuery("select last_insert_id();");
+            rs.next();
+
+            int courseId = Integer.parseInt(rs.getString(1));
+
+            logger.info("Successfully created a course with id" + courseId);
+
+            stmt.executeUpdate("insert into teaching_course " + "VALUES(" + user.getId() + ", " + courseId + ");");
+            logger.info(user.getEmail() + " teaches a course with id " + courseId);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Failed to create a course " + title);
+            logger.error("The exception: " + e);
             return Response.status(Response.Status.CONFLICT).build();
         }
         return Response.ok().build();

@@ -3,6 +3,8 @@ package services;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +25,8 @@ public class CourseRegistrationHandler {
     @Context
     private ServletContext context;
 
+    private static final Logger logger = LogManager.getLogger(CourseRegistrationHandler.class);
+
     @POST
     @Path("registertocourse")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -42,9 +46,9 @@ public class CourseRegistrationHandler {
             Statement stmt = MySQLConnection.connect().createStatement();
             String sqlQuery = "INSERT INTO enrolled_course " + "VALUES(" + user.getId() + ", " + course_id + ");";
             stmt.executeUpdate(sqlQuery);
-
+            logger.error("User: " + user + " successfully registered to course with id " + course_id);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error("Failed to register to a course: " + e);
             return Response.status(Response.Status.CONFLICT).build();
         }
         return Response.ok().build();

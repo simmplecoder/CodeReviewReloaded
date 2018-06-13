@@ -3,6 +3,8 @@ package services;
 import com.google.gson.Gson;
 import model.Course;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import representations.CoursesRequestFormat;
 
 import javax.servlet.ServletContext;
@@ -26,6 +28,8 @@ public class CoursesHandler {
     @Context
     private ServletContext context;
 
+    private static final Logger logger = LogManager.getLogger(CoursesHandler.class);
+
     @POST
     @Path("courses")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -36,16 +40,16 @@ public class CoursesHandler {
             return redirection;
         }
 
-        User user = (User) request.getSession().getAttribute("user");
-
         ArrayList<Course> courses = new ArrayList<>();
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
 
         CoursesRequestFormat requested = new Gson().fromJson(json, CoursesRequestFormat.class);
 
-        System.out.println(requested);
+        logger.info("Requested parameters: " + requested);
 
         if (user != null && user.getIsInstructor() == 1) {
+            logger.info("Retrieving instructor teaching course for " + user);
             try {
                 Statement stmt = MySQLConnection.connect().createStatement();
                 String sqlQuery =
@@ -57,19 +61,24 @@ public class CoursesHandler {
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     String title = rs.getString("title");
-                    Course course = new Course(id, title);
-                    courses.add(course);
+                    courses.add(new Course(id, title));
                 }
+
+                logger.info("Successfully retrieved courses for instructor: " + user);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                logger.error("Course retrieval error: " + e);
             }
         } else {
+            logger.info("Retrieving courses for student: " + user);
+
             String sqlQuery = "";
             if (requested.registered == true) {
                 sqlQuery = "select * from enrolled_course as ec, course as c  where ec.course_id = c.id and ec.user_id = " + user.getId() + ";";
+                logger.info("Retrieving enrolled courses.");
             } else {
                 sqlQuery = "select * from course where id not in (select ec.course_id from enrolled_course as ec, user as u where u.email = \"" +
                     user.getEmail() + "\" and u.id = ec.user_id);";
+                logger.info("Retrieving unregistered courses.");
             }
 
             try {
@@ -78,15 +87,15 @@ public class CoursesHandler {
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     String title = rs.getString("title");
-                    Course course = new Course(id, title);
-                    courses.add(course);
+                    courses.add(new Course(id, title));
                 }
+
+                logger.info("Successfully retrieved courses for student: " + user);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+                logger.error("Course retrieval error: " + e);
             }
         }
 
         return Response.ok(new Gson().toJson(courses), MediaType.APPLICATION_JSON_TYPE).build();
     }
-
 }
