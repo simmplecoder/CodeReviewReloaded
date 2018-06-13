@@ -53,17 +53,17 @@
         </div>
         
         <div class = "w3-col m2 l2">
-        		<div class="w3-dropdown-hover w3-right w3-cell-middle w3-center w3-green" style="height:100%;">
+        		<div class="w3-dropdown-click w3-right w3-cell-middle w3-center w3-green" style="height:100%;">
     			 	<div> <% 	String name = "some text";
                             user = (User) session.getAttribute("user");
                             if (user != null) {
                                 name = user.getFirst_name() + " " + user.getLast_name();
                             }
-        				%> 		
-        				<h4> <%=name%> </h4>
+        				%>
+                        <button onclick="myFunction()" class = "w3-green"> <%=name%> </button>
   				</div>
   				
-	      		<div class="w3-dropdown-content w3-bar-block w3-card" style="right:0">
+	      		<div id = "settings" class="w3-dropdown-content w3-bar-block w3-card" style="right:0">
                     <button class = "w3-button w3-text-green w3-hover-green w3-block " onclick="redirect_to_home();"> Home </button>
        				<button class = "w3-button w3-text-green w3-hover-green w3-block "> Settings </button>
        				<button class = "w3-button w3-text-green w3-hover-green w3-block" onclick="logout();"> Exit </button>
@@ -90,6 +90,15 @@
 </body>
 
 <script>
+
+    function myFunction() {
+        var x = document.getElementById("settings");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+        }
+    }
 
     var parameters = {"registered" : false};
     $("#course_list").append(not_enrolled_course_loader(parameters));

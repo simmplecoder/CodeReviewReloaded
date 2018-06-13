@@ -9,6 +9,8 @@ import commented_code.Comment;
 import commented_code.CommentedCode;
 import commented_code.Submission;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -37,6 +39,8 @@ public class AddCommentHandler {
 
     private MongoClient mongoClient = null;
 
+    private static final Logger logger = LogManager.getLogger(AddCommentHandler.class);
+
 
     public AddCommentHandler() {
         mongoClient = new MongoClient();
@@ -62,9 +66,9 @@ public class AddCommentHandler {
         MongoCollection<Document> collectionOfCodes = db.getCollection("commented_code");
 
         Bson filter = Filters.eq("_id", new ObjectId(comment.getFile_id()));
-
-//        System.out.println(collectionOfCodes.find(filter));
         collectionOfCodes.updateOne(filter, new Document("$push", new Document("comments", Document.parse(new Gson().toJson(comment)))));
+
+        logger.info("Added comment " + comment);
 
         return Response.ok(new Gson().toJson(comment), MediaType.APPLICATION_JSON_TYPE).build();
     }

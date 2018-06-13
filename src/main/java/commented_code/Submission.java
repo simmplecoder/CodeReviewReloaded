@@ -11,9 +11,7 @@ public class Submission {
     private int assignmentId;
     private List<String> fileIds;
 
-    public Submission() {
-
-    }
+    public Submission() { }
 
     public Submission(String title, String email, int assignmentId) {
         this.title = title;

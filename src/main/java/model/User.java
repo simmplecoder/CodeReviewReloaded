@@ -95,6 +95,6 @@ public class User {
     }
 
     public String toString() {
-        return id + " " + email + " " + password + " " + first_name + " " + last_name + " " + isInstructor;
+        return "(" + id + " " + email + " " + password + " " + first_name + " " + last_name + " " + isInstructor + ")";
     }
 }

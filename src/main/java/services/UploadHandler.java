@@ -12,6 +12,8 @@ import commented_code.Comment;
 import commented_code.CommentedCode;
 import commented_code.Submission;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -44,6 +46,7 @@ public class UploadHandler {
 
     private MongoClient mongoClient = null;
 
+    private static final Logger logger = LogManager.getLogger(UploadHandler.class);
 
     public UploadHandler() {
         mongoClient = new MongoClient();
@@ -63,6 +66,9 @@ public class UploadHandler {
         JSONObject submission = new JSONObject(json);
         JSONArray files = submission.getJSONArray("files");
         int assignment_id = submission.getInt("assignment_id");
+
+        logger.info("Received upload from user: " + user);
+        logger.info("Received " + files.length() + " files");
 
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
         MongoCollection<Document> collectionOfSubmissions = db.getCollection("submissions");
@@ -91,6 +97,8 @@ public class UploadHandler {
             Document commented_code_doc = Document.parse(new Gson().toJson(commentedCode));
             collectionOfCodes.insertOne(commented_code_doc);
         }
+
+        logger.info("Successfully upload and saved files to MongoDB");
 
         return Response.ok(new Gson().toJson("[]"), MediaType.APPLICATION_JSON_TYPE).build();
     }

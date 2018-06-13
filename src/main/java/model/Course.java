@@ -24,4 +24,9 @@ public class Course {
 		this.id = id;
 		this.title = title;
 	}
+
+	public String toString() {
+	    return "Course title: " + this.title + " and id: " + this.id;
+    }
+
 }

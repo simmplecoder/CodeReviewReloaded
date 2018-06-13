@@ -9,6 +9,10 @@
             <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
 
+        <File name="FileOutputErrors" fileName="${sys:catalina.base}/logs/CodeReviewToolError.logs">
+            <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </File>
+
         <File name="FileOutputAuthentication" fileName="${sys:catalina.base}/logs/CodeReviewToolAuthentication.logs">
             <PatternLayout pattern="%d{yyyy-mm-dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
         </File>
@@ -17,10 +21,15 @@
     <Loggers>
         <Root level="INFO">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="FileOutput"/>
         </Root>
 
         <Logger name="services.AuthentificationHandler" level="TRACE" additivity="false">
             <AppenderRef ref="FileOutputAuthentication"/>
+        </Logger>
+
+        <Logger level="ERROR" >
+            <AppenderRef ref="FileOutputErrors"/>
         </Logger>
     </Loggers>
 </Configuration>

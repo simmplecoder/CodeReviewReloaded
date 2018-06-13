@@ -66,6 +66,6 @@ public class Assignment {
     }
 
     public String toString() {
-        return this.id + " " + this.title + " " + this.desc + " " + this.course_id;
+        return "(" + this.id + " " + this.title + " " + this.desc + " " + this.course_id + ")";
     }
 }

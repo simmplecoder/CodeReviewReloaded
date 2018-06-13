@@ -60,5 +60,9 @@ public class Comment {
 	}
 	public String getAuthor() {
 		return author;
-	}	
+	}
+
+	public String toString() {
+		return "'" + this.comment + "'" + " to file " + this.file_id + "at lines from " + this.start + " to " + this.end + " by " + this.author;
+	}
 }

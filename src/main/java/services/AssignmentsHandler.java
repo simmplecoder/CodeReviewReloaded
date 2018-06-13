@@ -52,7 +52,8 @@ public class AssignmentsHandler {
                 String description = rs.getString("desc");
                 assignments.add(new Assignment(id, title, description, id));
             }
-            logger.info("Successfully retrieved assignment for course id " + courseId);
+            logger.info("Retrieved assignments for course id " + courseId);
+            logger.info("Assignments: " + assignments);
         } catch (Exception e) {
             logger.error("Could not retrieve assignments for course id " + courseId);
             logger.error("Exception message: " + e);

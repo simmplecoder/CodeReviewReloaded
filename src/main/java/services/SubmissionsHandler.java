@@ -10,6 +10,8 @@ import com.mongodb.client.model.Filters;
 
 import commented_code.Submission;
 import model.User;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -38,6 +40,8 @@ public class SubmissionsHandler {
 
     private MongoClient mongoClient = null;
 
+    private static final Logger logger = LogManager.getLogger(SubmissionsHandler.class);
+
     public SubmissionsHandler() {
         mongoClient = new MongoClient();
     }
@@ -51,14 +55,11 @@ public class SubmissionsHandler {
         if (redirection != null) { return redirection; }
 
         User user = (User) request.getSession().getAttribute("user");
-
         SubmissionsRequestFormat rf = new Gson().fromJson(json, SubmissionsRequestFormat.class);
 
-        // a new try.s
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
         MongoCollection<Document> coll = db.getCollection("submissions");
 
-//        System.out.println(rf.id);;
         Bson filter = Filters.eq("assignmentId", rf.id);
         if (user.getIsInstructor() == 0)
             filter = and(filter, Filters.eq("email", user.getEmail()));
@@ -68,12 +69,13 @@ public class SubmissionsHandler {
         MongoCursor<Document> cursor = findIt.iterator();
 
         List<Submission> submissions = new ArrayList<>();
+        logger.info("Retrieving submissions for assignment " + rf.id);
         while (cursor.hasNext()) {
             Document temp = cursor.next();
-            Submission submis = new Gson().fromJson(temp.toJson(), Submission.class);
-            submis.setId(temp.get("_id").toString());
-            submissions.add(submis);
-            System.out.println("Submission " + submis);
+            Submission submission = new Gson().fromJson(temp.toJson(), Submission.class);
+            submission.setId(temp.get("_id").toString());
+            submissions.add(submission);
+            logger.info("Retrieved submission " + submission);
         }
 
         return Response.ok(new Gson().toJson(submissions), MediaType.APPLICATION_JSON_TYPE).build();

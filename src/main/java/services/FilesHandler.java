@@ -14,6 +14,8 @@ import commented_code.Comment;
 import commented_code.CommentedCode;
 import commented_code.FileTemp;
 import commented_code.Submission;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
@@ -42,11 +44,9 @@ public class FilesHandler {
 
     private MongoClient mongoClient = null;
 
+    private static final Logger logger = LogManager.getLogger(FilesHandler.class);
 
-    public FilesHandler() {
-        mongoClient = new MongoClient();
-//        checking();
-    }
+    public FilesHandler() { mongoClient = new MongoClient(); }
 
     @POST
     @Path("files")
@@ -60,11 +60,10 @@ public class FilesHandler {
 
         FilesRequestFormat rf = new Gson().fromJson(json, FilesRequestFormat.class);
 
-        // a new try.s
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
         MongoCollection<Document> coll = db.getCollection("commented_code");
 
-        System.out.println("request submission id is " + rf.submission_id);
+        logger.info("Requested file belongs to submission with id: " + rf.submission_id);
 
         Bson bsonFilter = Filters.eq("submissionId", rf.submission_id);
         FindIterable<Document> findIt = coll.find(bsonFilter);
@@ -73,146 +72,11 @@ public class FilesHandler {
         List<CommentedCode> files = new ArrayList<>();
         while (cursor.hasNext()) {
             Document temp = cursor.next();
-
-            System.out.println(temp.toJson());
             CommentedCode file = new Gson().fromJson(temp.toJson(), commented_code.CommentedCode.class);
-
             file.setId(temp.get("_id").toString());
             files.add(file);
-            System.out.println("file:\n" + file);
+            logger.info("Related file to requested submission: " + file);
         }
         return Response.ok(new Gson().toJson(files), MediaType.APPLICATION_JSON_TYPE).build();
-    }
-
-    void checking() {
-        MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
-        MongoCollection<Document> coll = db.getCollection("commented_code");
-
-        CommentedCode code = new CommentedCode("#include <iostream>\n" +
-                "using namespace std;\n" +
-                "\n" +
-                "template <typename T>\n" +
-                "struct Node {\n" +
-                "    T data;\n" +
-                "    struct Node* link;\n" +
-                "    \n" +
-                "    Node<T>(T data) : data(data), link(NULL) {}\n" +
-                "};\n" +
-                "\n" +
-                "template <typename T>\n" +
-                "class Stack {\n" +
-                "private:\n" +
-                "    Node<T> *head;\n" +
-                "    int size;\n" +
-                "public:\n" +
-                "    Stack<T>() : head(NULL), size(0) {}\n" +
-                "    \n" +
-                "    void push(T data) {\n" +
-                "        Node<T> *node = new Node<T>(data);\n" +
-                "        node -> link = head;\n" +
-                "        head = node;\n" +
-                "        size = size + 1;\n" +
-                "    }\n" +
-                "    \n" +
-                "    T pop() {\n" +
-                "        // Saving the data of the top element.\n" +
-                "        T data = head -> data;\n" +
-                "        // Saving the next element.\n" +
-                "        Node<T> *link = head -> link;\n" +
-                "        // Freeing memory of the top element.\n" +
-                "        delete head;\n" +
-                "        // Shifting to the next element.\n" +
-                "        head = link;\n" +
-                "        \n" +
-                "        // Decreasing the size of the stack.\n" +
-                "        size = size - 1;\n" +
-                "        \n" +
-                "        return data;\n" +
-                "    }\n" +
-                "    \n" +
-                "    const bool isEmpty() {\n" +
-                "        return size == 0;\n" +
-                "    }\n" +
-                "    \n" +
-                "    const int getSize() {\n" +
-                "        return size;\n" +
-                "    }\n" +
-                "    \n" +
-                "    ~Stack() {\n" +
-                "        Node<T> *temp = NULL;\n" +
-                "        while (head) {\n" +
-                "            temp = head -> link;\n" +
-                "            delete head;\n" +
-                "            head = temp;\n" +
-                "        }\n" +
-                "        delete temp;\n" +
-                "        cout << \"The stack is completely deleted!\" << endl;\n" +
-                "    }\n" +
-                "};\n" +
-                "\n" +
-                "template <typename T>\n" +
-                "class Queue {\n" +
-                "private:\n" +
-                "    int size;\n" +
-                "    Stack<T> *stackFirstOnTop;\n" +
-                "    Stack<T> *stackLastOnTop;\n" +
-                "public:\n" +
-                "    Queue() : size(0), stackFirstOnTop(new Stack<T>()), stackLastOnTop(new Stack<T>()) {}\n" +
-                "    \n" +
-                "    void insert(T data) {\n" +
-                "        stackLastOnTop -> push(data);\n" +
-                "        size = size + 1;\n" +
-                "    }\n" +
-                "    \n" +
-                "    T enqueue() {\n" +
-                "        while (!stackLastOnTop -> isEmpty()) {\n" +
-                "            stackFirstOnTop -> push(stackLastOnTop -> pop());\n" +
-                "        }\n" +
-                "        size = size - 1;\n" +
-                "        return stackFirstOnTop -> pop();\n" +
-                "    }\n" +
-                "    \n" +
-                "    const int getSize() {\n" +
-                "        return size;\n" +
-                "    }\n" +
-                "};\n" +
-                "\n" +
-                "void foo() {\n" +
-                "    Queue<int> q;\n" +
-                "    \n" +
-                "    int N = 100000;\n" +
-                "    for (int i = 0; i < N; i++) {\n" +
-                "        q.insert(i);\n" +
-                "    }\n" +
-                "    \n" +
-                "    for (int i = 0; i < N; i++) {\n" +
-                "        cout << q.enqueue() << \" \";\n" +
-                "    }\n" +
-                "    \n" +
-                "    cout << endl;\n" +
-                "}\n" +
-                "\n" +
-                "int main(int argc, const char * argv[]) {\n" +
-                "\n" +
-                "    foo();\n" +
-                "    \n" +
-                "    return 0;\n" +
-                "}\n");
-
-        Comment comment1 = new Comment("cool job!", "ymademikhanov", 1, 10);
-        Comment comment3 = new Comment("I really appreciate it =)", "ymademikhanov", 7, 10);
-        Comment comment2 = new Comment("how to check whether it agnostic?", "ymademikhanov", 40, 50);
-
-        code.addComment(comment1);
-        code.addComment(comment2);
-
-        code.setSubmissionId("5b1828958282383fd7ce81db");
-        code.setName("queue.cpp");
-
-        Document d = Document.parse(new Gson().toJson(code));
-
-        coll.insertOne(d);
-
-
     }
 }
