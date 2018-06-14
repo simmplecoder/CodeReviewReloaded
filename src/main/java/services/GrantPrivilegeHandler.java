@@ -34,6 +34,10 @@ public class GrantPrivilegeHandler {
 
     SessionFactory factory;
 
+    public SessionFactory getFactory() {
+        return new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
+    }
+
     public GrantPrivilegeHandler() {
         factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
     }
@@ -51,7 +55,7 @@ public class GrantPrivilegeHandler {
         int isInstructor = params.get("instructor").getAsInt();
 
         User user = null;
-        try (Session hibernate = factory.getCurrentSession()) {
+        try (Session hibernate = getFactory().getCurrentSession()) {
             hibernate.beginTransaction();
             List<User> users = hibernate.createQuery("select u from User u where u.id = :id")
                     .setParameter("id", user_id)

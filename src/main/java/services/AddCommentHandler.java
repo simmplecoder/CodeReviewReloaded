@@ -41,7 +41,6 @@ public class AddCommentHandler {
 
     private static final Logger logger = LogManager.getLogger(AddCommentHandler.class);
 
-
     public AddCommentHandler() {
         mongoClient = new MongoClient();
     }
@@ -59,8 +58,6 @@ public class AddCommentHandler {
 
         Comment comment = new Gson().fromJson(json, Comment.class);
         comment.setAuthor(user.getEmail());
-
-        System.out.println(comment.getFile_id());
 
         MongoDatabase db = mongoClient.getDatabase("CodeReviewTool");
         MongoCollection<Document> collectionOfCodes = db.getCollection("commented_code");

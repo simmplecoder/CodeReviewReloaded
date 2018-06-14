@@ -34,6 +34,10 @@ public class UsersHandler {
 
     SessionFactory factory;
 
+    public SessionFactory getFactory() {
+        return new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
+    }
+
     public UsersHandler() {
         factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).addAnnotatedClass(Course.class).buildSessionFactory();
     }
@@ -51,7 +55,7 @@ public class UsersHandler {
         JsonObject params = new JsonParser().parse(json).getAsJsonObject();
         int isInstructors = params.get("instructors").getAsInt();
 
-        Session hibernate = factory.getCurrentSession();
+        Session hibernate = getFactory().getCurrentSession();
         hibernate.beginTransaction();
         List<User> list = hibernate.createQuery("from User").list();
         hibernate.getTransaction().commit();

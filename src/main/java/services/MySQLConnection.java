@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class MySQLConnection {
     private static int localPort = 3306;
@@ -29,8 +30,16 @@ public class MySQLConnection {
     }
 
     public static Connection connect() {
-        if (instance == null) {
-            instance = new MySQLConnection();
+        try {
+            if (instance == null || instance.conn.isClosed() == true)
+                instance = new MySQLConnection();
+
+            if (instance.conn.isClosed() == true)
+                logger.info("Mysql connection was closed.");
+
+            logger.error("Created mysql connection.");
+        } catch (SQLException e) {
+            logger.error("Failed to initialize mysql with exception: " + e);
         }
         return instance.conn;
     }

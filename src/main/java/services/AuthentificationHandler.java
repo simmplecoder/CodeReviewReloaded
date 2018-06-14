@@ -33,6 +33,10 @@ public class AuthentificationHandler {
 
     SessionFactory factory;
 
+    public SessionFactory getFactory() {
+        return new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
+    }
+
     public AuthentificationHandler() {
         factory = new Configuration().configure("hibernate.cfg.xml").addAnnotatedClass(User.class).buildSessionFactory();
     }
@@ -50,7 +54,7 @@ public class AuthentificationHandler {
         Response.ResponseBuilder builder;
         LoginAttempt attempt = new Gson().fromJson(json, LoginAttempt.class);
 
-        Session hibernate = factory.getCurrentSession();
+        Session hibernate = getFactory().getCurrentSession();
 
         hibernate.beginTransaction();
         List<User> list = (List<User>) hibernate.createQuery("from User u where u.email=:email and u.password=:password")
@@ -87,7 +91,7 @@ public class AuthentificationHandler {
         User user = new Gson().fromJson(json, User.class);
 
         try {
-            Session hibernate = factory.getCurrentSession();
+            Session hibernate = getFactory().getCurrentSession();
             hibernate.beginTransaction();
             hibernate.save(user);
             hibernate.flush();
