@@ -31,12 +31,11 @@ public class MySQLConnection {
 
     public static Connection connect() {
         try {
-            if (instance == null || instance.conn.isClosed() == true)
+            if (instance == null || instance.conn.isClosed() == true) {
+                if (instance.conn.isClosed() == true)
+                    logger.info("Mysql connection was closed.");
                 instance = new MySQLConnection();
-
-            if (instance.conn.isClosed() == true)
-                logger.info("Mysql connection was closed.");
-
+            }
             logger.error("Created mysql connection.");
         } catch (SQLException e) {
             logger.error("Failed to initialize mysql with exception: " + e);
